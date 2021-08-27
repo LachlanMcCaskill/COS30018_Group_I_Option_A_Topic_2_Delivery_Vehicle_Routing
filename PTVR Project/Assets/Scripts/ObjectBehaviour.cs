@@ -6,44 +6,74 @@ public class ObjectBehaviour : MonoBehaviour
 {
     private const int SPEED = 10;
 
+    [SerializeField] GameObject stop1;
+    [SerializeField] GameObject stop2;
+    [SerializeField] GameObject stop3;
+    [SerializeField] GameObject stop4;
+    [SerializeField] GameObject bus;
+    Vector3 currentStop = new Vector3(0f, 0f, 0f);
+    Vector3 currentPosition;
+    private Transform stop;
+
     // Start is called before the first frame update
     void Start()
     {
-       
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 currentStop = new Vector3(100.0f, 100.0f, 0.0f);
-        GameObject stop = GameObject.Find("Point A");
 
-        GameObject bus = GameObject.Find("MovingCube");
-        Vector3 currentPosition = bus.transform.position;
-
-
-        if (bus.transform.position.x < currentStop.x)
-        {
-            transform.position = transform.position + new Vector3(currentPosition.x * SPEED * Time.deltaTime, 0, currentPosition.z);
-        }
-        else if (bus.transform.position.x > currentStop.x)
-        {
-            transform.position = transform.position + new Vector3(currentPosition.x * SPEED * Time.deltaTime, 0, currentPosition.z);
-        }
         
-        if (bus.transform.position.z < currentStop.z)
+        //if (currentStop == new Vector3(0f, 0f, 0f))
+        //{
+        //    currentStop = stop1.transform.position;
+        //}
+        //else if ((currentStop == stop1.transform.position) && ((currentPosition.z < currentStop.z) && (currentPosition.x < currentStop.x)))
+        //{
+        //    currentStop = stop2.transform.position;
+        //}
+        //else if ((currentStop == stop2.transform.position) && ((currentPosition.z > currentStop.z) && (currentPosition.x > currentStop.x)))
+        //{
+        //    currentStop = stop1.transform.position;
+        //}
+
+        currentPosition = bus.transform.position;
+
+        float step = SPEED * Time.deltaTime;
+
+        transform.position = Vector3.MoveTowards(transform.position, stop.position, step);
+
+        if (Vector3.Distance(transform.position, stop.position) < 0.001f)
         {
-            transform.position = transform.position + new Vector3(currentPosition.x, 0, currentPosition.z * SPEED * Time.deltaTime);
-        }
-        else if (bus.transform.position.z > currentStop.z)
-        {
-            transform.position = transform.position + new Vector3(currentPosition.x, 0, currentPosition.z * SPEED * Time.deltaTime);
+            stop.position *= -1.0f;
         }
 
-    }
+        //if (bus.transform.position.x < currentStop.x)
+        //{
+        //    transform.position = transform.position + new Vector3(1f, 0f, 0f) * Time.deltaTime * SPEED;
+        //}
+        //else if (bus.transform.position.x > currentStop.x)
+        //{
+        //    transform.position = transform.position + new Vector3(-1f, 0f, 0f) * Time.deltaTime * SPEED;
+        //}
 
-    private void currentDestination()
-    {
+        //else if (bus.transform.position.z < currentStop.z)
+        //{
+        //    transform.position = transform.position + new Vector3(0, 0f, 1f) * Time.deltaTime * SPEED;
+        //}
+        //else if (bus.transform.position.z > currentStop.z)
+        //{
+        //    transform.position = transform.position + new Vector3(0, 0f, -1f) * Time.deltaTime * SPEED;
+        //}
+
+
+        //if (currentStop == currentPosition)
+        //{
+        //    currentStop = stop2.transform.position;
+        //}
+
 
     }
 
