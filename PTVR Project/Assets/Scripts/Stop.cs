@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Passenger : MonoBehaviour
+public class Stop : MonoBehaviour
 {
-    private Stop _intendedDestination;
+    private List<Passenger> _passengers;
 }
