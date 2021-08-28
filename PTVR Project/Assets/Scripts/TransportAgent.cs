@@ -10,7 +10,7 @@ public class TransportAgent : MonoBehaviour
 
     private void TravelToNextDestination()
     {
-
+        //Move toward the next stop in the route
     }
 
     private void AddPassenger(Passenger p)
@@ -20,17 +20,17 @@ public class TransportAgent : MonoBehaviour
 
     private void ArriveAtStop()
     {
-
+        //stop at the current stop in the route and drop off passengers
     }
 
     private void AssignRoute(Route r)
     {
-
+        //set the route of this agent
     }
 
     private void SendCapacity()
     {
-
+        //access the messaging system to send a messgae to the master routing agent containg information about this agent's capacity
     }
 
     void Start()
