@@ -10,7 +10,10 @@ public class MasterRoutingAgent : MonoBehaviour
 
     private void SendRoutes()
     {
-
+        foreach(TransportAgent t in _transportAgent)
+        {
+            //assign the correct route to every single transport agent
+        }
     }
 
     private void CreateRoutes()

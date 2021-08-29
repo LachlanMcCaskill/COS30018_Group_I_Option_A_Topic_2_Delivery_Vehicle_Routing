@@ -15,4 +15,15 @@ public class RouteSolver : MonoBehaviour
     {
         
     }
+
+    List<Route> Solve()
+    {
+        List<Route> result = new List<Route>();
+        return result;
+    }
+
+    public void PrintSolutionToTerminal()
+    {
+        Debug.Log("Printing Solution to DRV Problem");
+    }
 }
