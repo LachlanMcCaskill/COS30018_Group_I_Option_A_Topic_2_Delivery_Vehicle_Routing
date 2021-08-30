@@ -6,7 +6,12 @@ public class TransportAgent : MonoBehaviour
 {
     private List<Passenger> _passengers;
     private int _capacity;
-    private Route currentRoute;
+    private Route currentRoute = new Route();
+
+    TransportAgent(int capacity)
+    {
+        _capacity = capacity;
+    }
 
     private void TravelToNextDestination()
     {
