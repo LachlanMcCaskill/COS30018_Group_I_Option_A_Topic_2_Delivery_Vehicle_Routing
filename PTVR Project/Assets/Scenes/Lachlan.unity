@@ -1088,7 +1088,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6237143340746854489, guid: bd6b51e1b40d09740b8b30f001a58060, type: 3}
       propertyPath: m_TagString
-      value: Stop
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 6700643857303619189, guid: bd6b51e1b40d09740b8b30f001a58060, type: 3}
       propertyPath: m_RootOrder

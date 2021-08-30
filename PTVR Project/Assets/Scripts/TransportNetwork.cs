@@ -14,5 +14,6 @@ public class TransportNetwork : MonoBehaviour
         {
             _destinations.Add(g.GetComponent<Stop>());
         }
+        _start = GameObject.Find("Depot").GetComponent<Stop>();
     }
 }
