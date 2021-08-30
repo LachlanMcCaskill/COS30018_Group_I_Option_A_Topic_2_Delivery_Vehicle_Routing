@@ -5,9 +5,9 @@ using UnityEngine;
 public class TransportNetwork : MonoBehaviour
 {
     private Stop _start;
-    private List<Stop> _destinations;
+    public List<Stop> _destinations;
 
-    TransportNetwork()
+    public TransportNetwork()
     {
         GameObject[] tempList = GameObject.FindGameObjectsWithTag("Stop");
         foreach(GameObject g in tempList)
