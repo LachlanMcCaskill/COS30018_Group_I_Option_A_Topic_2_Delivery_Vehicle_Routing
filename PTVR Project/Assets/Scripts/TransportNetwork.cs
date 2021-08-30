@@ -16,4 +16,9 @@ public class TransportNetwork : MonoBehaviour
         }
         _start = GameObject.Find("Depot").GetComponent<Stop>();
     }
+
+    public void passengerSetup(List<Passenger> passengers)
+    {
+        _start.addPassengers(passengers);
+    }
 }
