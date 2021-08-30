@@ -13,12 +13,17 @@ public class ObjectBehaviour : MonoBehaviour
     [SerializeField] GameObject bus;
     Vector3 currentStop = new Vector3(0f, 0f, 0f);
     Vector3 currentPosition;
-    private Transform stop;
+    private Transform stop = stop1.transform;
+
+    Vector3[] objectList = new Vector3[4];
 
     // Start is called before the first frame update
     void Start()
     {
+        for (int i = 0; i < 5; i++)
+        {
 
+        }
     }
 
     // Update is called once per frame
