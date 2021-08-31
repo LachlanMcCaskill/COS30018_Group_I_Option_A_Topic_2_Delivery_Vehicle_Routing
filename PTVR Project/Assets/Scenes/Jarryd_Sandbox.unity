@@ -446,8 +446,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   stop1: {fileID: 2100872742}
   stop2: {fileID: 52039554}
-  stop3: {fileID: 0}
-  stop4: {fileID: 0}
+  stop3: {fileID: 1598088481}
+  stop4: {fileID: 880267756}
   bus: {fileID: 235442680}
 --- !u!1 &880267756
 GameObject:

@@ -1,84 +1,69 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class ObjectBehaviour : MonoBehaviour
 {
     private const int SPEED = 10;
 
+//initalise pre-existing objects in Unity Scene
     [SerializeField] GameObject stop1;
     [SerializeField] GameObject stop2;
     [SerializeField] GameObject stop3;
     [SerializeField] GameObject stop4;
     [SerializeField] GameObject bus;
+
+    GameObject stop;
+
     Vector3 currentStop = new Vector3(0f, 0f, 0f);
     Vector3 currentPosition;
-    private Transform stop = stop1.transform;
 
-    Vector3[] objectList = new Vector3[4];
+    int i = 0;
+    private List<GameObject> _objectList = new List<GameObject>();
+
+
 
     // Start is called before the first frame update
     void Start()
     {
-        for (int i = 0; i < 5; i++)
-        {
-
-        }
+        //Add GameObjects to List of GameObjects
+        _objectList.Add(stop1);
+        _objectList.Add(stop2);
+        _objectList.Add(stop3);
+        _objectList.Add(stop4);
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        //Start of Scene Initalizer
+        if (i == 0)
+        {
+            stop = _objectList[i];
+                i++;
+        }
         
-        //if (currentStop == new Vector3(0f, 0f, 0f))
-        //{
-        //    currentStop = stop1.transform.position;
-        //}
-        //else if ((currentStop == stop1.transform.position) && ((currentPosition.z < currentStop.z) && (currentPosition.x < currentStop.x)))
-        //{
-        //    currentStop = stop2.transform.position;
-        //}
-        //else if ((currentStop == stop2.transform.position) && ((currentPosition.z > currentStop.z) && (currentPosition.x > currentStop.x)))
-        //{
-        //    currentStop = stop1.transform.position;
-        //}
-
+        //set current position and Move towards current destination
         currentPosition = bus.transform.position;
 
         float step = SPEED * Time.deltaTime;
 
-        transform.position = Vector3.MoveTowards(transform.position, stop.position, step);
+        transform.position = Vector3.MoveTowards(transform.position, stop.transform.position, step);
 
-        if (Vector3.Distance(transform.position, stop.position) < 0.001f)
+
+        //Set new stop in list, else close editor
+        if (Vector3.Distance(transform.position, stop.transform.position) < 0.001f)
         {
-            stop.position *= -1.0f;
+
+            stop = _objectList[i];
+            i++;
+
+            if (i == 4)
+            {
+                UnityEditor.EditorApplication.isPlaying = false;
+            }
         }
-
-        //if (bus.transform.position.x < currentStop.x)
-        //{
-        //    transform.position = transform.position + new Vector3(1f, 0f, 0f) * Time.deltaTime * SPEED;
-        //}
-        //else if (bus.transform.position.x > currentStop.x)
-        //{
-        //    transform.position = transform.position + new Vector3(-1f, 0f, 0f) * Time.deltaTime * SPEED;
-        //}
-
-        //else if (bus.transform.position.z < currentStop.z)
-        //{
-        //    transform.position = transform.position + new Vector3(0, 0f, 1f) * Time.deltaTime * SPEED;
-        //}
-        //else if (bus.transform.position.z > currentStop.z)
-        //{
-        //    transform.position = transform.position + new Vector3(0, 0f, -1f) * Time.deltaTime * SPEED;
-        //}
-
-
-        //if (currentStop == currentPosition)
-        //{
-        //    currentStop = stop2.transform.position;
-        //}
-
 
     }
 
