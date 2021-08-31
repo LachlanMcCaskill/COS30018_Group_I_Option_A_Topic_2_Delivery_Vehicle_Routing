@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class RouteSolver : MonoBehaviour
 {
-    private TransportNetwork _transportNetwork = new TransportNetwork();    
+    public TransportNetwork _transportNetwork;    
+
+    public RouteSolver()
+    {
+        _transportNetwork = new TransportNetwork();
+    }  
 
     // Start is called before the first frame update
     void Start()
