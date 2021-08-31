@@ -6,7 +6,7 @@ public class Passenger : MonoBehaviour
 {
     private Stop _intendedDestination;
 
-    Passenger(Stop destinationToSet)
+    public Passenger(Stop destinationToSet)
     {
         _intendedDestination = destinationToSet;
     }

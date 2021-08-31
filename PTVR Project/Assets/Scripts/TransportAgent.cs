@@ -8,7 +8,7 @@ public class TransportAgent : MonoBehaviour
     private int _capacity;
     private Route currentRoute = new Route();
 
-    TransportAgent(int capacity)
+    public TransportAgent(int capacity)
     {
         _capacity = capacity;
     }
