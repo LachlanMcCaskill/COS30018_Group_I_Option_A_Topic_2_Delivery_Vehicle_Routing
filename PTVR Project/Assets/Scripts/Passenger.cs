@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using MessageSystem;
 
-public class destinationMessage : Message
+public class DestinationMessage : Message
 {
     public GameObject destination;
 }
@@ -19,12 +19,12 @@ public class Passenger : MonoBehaviour
 
     public void sendDestination()
     {
-        Debug.Log("I want to go to " + _intendedDestination.name);	
+        Debug.Log("I want to go to point" + _intendedDestination.name + ".");	
 
 		// send an introduction message
 		MessageBoard.SendMessage
         (
-            new destinationMessage
+            new DestinationMessage
             {
                 destination = _intendedDestination,
             }
