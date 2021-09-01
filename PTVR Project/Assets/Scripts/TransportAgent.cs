@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using MessageSystem;
 
+public class CapacityMessage : Message
+{
+    public int capacity;
+}
+
 public class TransportAgent : MonoBehaviour
 {
     private List<Passenger> _passengers;
@@ -37,6 +42,16 @@ public class TransportAgent : MonoBehaviour
     private void SendCapacity()
     {
         //access the messaging system to send a messgae to the master routing agent containg information about this agent's capacity
+        Debug.Log("I can hold " + _capacity + " people.");	
+
+		// send an introduction message
+		MessageBoard.SendMessage
+        (
+            new CapacityMessage
+            {
+                capacity = _capacity,
+            }
+        );
     }
 
     void Start()
