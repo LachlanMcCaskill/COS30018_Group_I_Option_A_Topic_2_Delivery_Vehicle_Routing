@@ -4,21 +4,16 @@ using UnityEngine;
 
 public class TransportNetwork : MonoBehaviour
 {
-    private Stop _start;
-    public List<Stop> _destinations;
+    private GameObject _start;
+    public List<GameObject> _destinations;
 
     public TransportNetwork()
     {
         GameObject[] tempList = GameObject.FindGameObjectsWithTag("Stop");
         foreach(GameObject g in tempList)
         {
-            _destinations.Add(g.GetComponent<Stop>());
+            _destinations.Add(g);
         }
-        _start = GameObject.Find("Depot").GetComponent<Stop>();
-    }
-
-    public void passengerSetup(List<Passenger> passengers)
-    {
-        _start.addPassengers(passengers);
+        _start = GameObject.Find("Depot");
     }
 }

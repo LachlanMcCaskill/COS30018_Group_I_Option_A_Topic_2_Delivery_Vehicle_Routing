@@ -11,9 +11,9 @@ public class main : MonoBehaviour
         RouteSolver rs = new RouteSolver();
         //create the passengers
         List<Passenger> passengersToTransport = new List<Passenger>();
-        foreach(Stop s in rs._transportNetwork._destinations)
+        foreach(GameObject g in rs._transportNetwork._destinations)
         {
-            passengersToTransport.Add(new Passenger(s));
+            passengersToTransport.Add(new Passenger(g));
         }
         //create the transportAgents (buses)
         List<TransportAgent> transportAgents = new List<TransportAgent>();

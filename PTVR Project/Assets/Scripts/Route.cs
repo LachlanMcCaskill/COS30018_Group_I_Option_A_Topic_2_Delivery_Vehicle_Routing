@@ -4,5 +4,5 @@ using UnityEngine;
 [System.Serializable]
 public class Route
 {
-    public Stack<Stop> Stops;
+    public Stack<GameObject> Stops;
 }
