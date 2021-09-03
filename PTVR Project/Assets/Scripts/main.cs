@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class main : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class main : MonoBehaviour
         List<TransportAgent> transportAgents = new List<TransportAgent>();
         transportAgents.Add(new TransportAgent(5));
         transportAgents.Add(new TransportAgent(5));
-        transportAgents.Add(new TransportAgent(5));
+        transportAgents.Add(new TransportAgent(6));
+        List<Vector3> points = rs._transportNetwork._destinations.Select(obj => obj.transform.position).ToList();
+        rs.Solve(rs._transportNetwork._start.transform.position, points, transportAgents.Count());
     }
 }

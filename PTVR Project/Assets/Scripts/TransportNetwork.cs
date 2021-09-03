@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TransportNetwork : MonoBehaviour
 {
-    private GameObject _start;
+    public GameObject _start;
     public List<GameObject> _destinations;
 
     public TransportNetwork()
