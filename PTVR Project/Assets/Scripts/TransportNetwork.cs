@@ -1,19 +1,30 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
-public class TransportNetwork : MonoBehaviour
+public class TransportNetwork
 {
-    public GameObject _start;
-    public List<GameObject> _destinations;
+    public GameObject Start;
+    public GameObject[] Destinations;
 
     public TransportNetwork()
     {
-        GameObject[] tempList = GameObject.FindGameObjectsWithTag("Stop");
-        foreach(GameObject g in tempList)
-        {
-            _destinations.Add(g);
-        }
-        _start = GameObject.Find("Depot");
+        Start = GameObject.Find("Depot");
+        Destinations = GameObject.FindGameObjectsWithTag("Stop");
     }
+
+	public List<Vector3> DestinationPoints => Destinations.Select(destination => destination.transform.position).ToList();
+
+	public List<GameObject> ConvertRouteToDestinations(Route route) 
+	{
+		List<GameObject> destinations = route.Destinations
+			.Select(point => Destinations.First(destination => destination.transform.position == point))
+			.ToList();
+		
+		// add begining and end
+		destinations.Insert(0, Start);
+		destinations.Add(Start);
+
+		return destinations;
+	}
 }

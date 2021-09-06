@@ -2,10 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MessageSystem;
+using RouteSolver;
 
 public class MasterRoutingAgent : MonoBehaviour
 {
-    private RouteSolver _routeSolver;
+    private IRouteSolver _routeSolver;
     private TransportNetwork _transportNetwork;
     private List<TransportAgent> _transportAgent;
 
