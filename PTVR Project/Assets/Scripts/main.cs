@@ -20,7 +20,7 @@ public class main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-		TransportNetwork network = new TransportNetwork();
+		TransportNetwork network = GameObject.Find("Network").GetComponent<TransportNetwork>();
 
         //create the route solver
         IRouteSolver rs = new GreedyRouteSolver();
@@ -39,7 +39,7 @@ public class main : MonoBehaviour
         transportAgents.Add(new TransportAgent(6));
 
 		// solve routes
-		Vector3 start = network.Start.transform.position;
+		Vector3 start = network.depotDestination.transform.position;
         List<Vector3> points = network.DestinationPoints;
 		int vehicleCount = transportAgents.Count();
         List<Route> routes = rs.Solve(start, points, vehicleCount);
