@@ -21,6 +21,7 @@ public class main : MonoBehaviour
     void Start()
     {
 		TransportNetwork network = GameObject.Find("Network").GetComponent<TransportNetwork>();
+		network.InitialiseNetwork();
 
         //create the route solver
         IRouteSolver rs = new GreedyRouteSolver();
@@ -29,6 +30,7 @@ public class main : MonoBehaviour
         List<Passenger> passengersToTransport = new List<Passenger>();
         foreach(GameObject destination in network.Destinations)
         {
+			//Debug.Log(destination.name);
             passengersToTransport.Add(new Passenger(destination));
         }
 
@@ -40,6 +42,7 @@ public class main : MonoBehaviour
 
 		// solve routes
 		Vector3 start = network.depotDestination.transform.position;
+		network.printNetwork();
         List<Vector3> points = network.DestinationPoints;
 		int vehicleCount = transportAgents.Count();
         List<Route> routes = rs.Solve(start, points, vehicleCount);

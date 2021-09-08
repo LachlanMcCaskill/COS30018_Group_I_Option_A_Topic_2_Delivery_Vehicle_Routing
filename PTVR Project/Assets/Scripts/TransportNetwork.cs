@@ -9,8 +9,9 @@ public class TransportNetwork : MonoBehaviour
 	public GameObject stopPrefab;
 	public int stopCount = 16;
 
-	public void Start()
+	public void InitialiseNetwork()
 	{
+		//Debug.Log("Initialised Transport Network Values");
 		depotDestination = GameObject.Find("Depot");
         Destinations = GameObject.FindGameObjectsWithTag("Stop");
 
@@ -20,7 +21,8 @@ public class TransportNetwork : MonoBehaviour
 			for(int i = 0; i<stopCount; i++)
 			{
 				Vector3 randomPosition = new Vector3(Random.Range(0f, 100f), 0f, Random.Range(0f, 100f));
-				Instantiate(stopPrefab, randomPosition, Quaternion.identity);
+				GameObject destinationToAdd = Instantiate(stopPrefab, randomPosition, Quaternion.identity);
+				Destinations[i] = destinationToAdd;
 			}
 		}
 		else if(Destinations.Length == 0 && stopPrefab == null)
@@ -51,5 +53,18 @@ public class TransportNetwork : MonoBehaviour
 		destinations.Add(depotDestination);
 
 		return destinations;
+	}
+
+	public void printNetwork()
+	{
+		foreach(GameObject g in Destinations)
+		{
+			Debug.Log(g.name);
+		}
+
+		if(Destinations.Length == 0)
+		{
+			Debug.Log("No destinations to print!");
+		}
 	}
 }
