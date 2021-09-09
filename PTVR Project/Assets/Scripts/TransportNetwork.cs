@@ -18,10 +18,12 @@ public class TransportNetwork : MonoBehaviour
 		//if there are no stops in the scene, create them randomly
 		if(Destinations.Length == 0 && stopPrefab != null)
 		{
+			Destinations = new GameObject[stopCount];
 			for(int i = 0; i<stopCount; i++)
 			{
 				Vector3 randomPosition = new Vector3(Random.Range(0f, 100f), 0f, Random.Range(0f, 100f));
 				GameObject destinationToAdd = Instantiate(stopPrefab, randomPosition, Quaternion.identity);
+				destinationToAdd.name = (i+1).ToString();
 				Destinations[i] = destinationToAdd;
 			}
 		}
