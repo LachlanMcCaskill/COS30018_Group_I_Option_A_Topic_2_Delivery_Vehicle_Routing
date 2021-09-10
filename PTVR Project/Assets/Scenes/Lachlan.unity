@@ -720,6 +720,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 876638803}
+  - component: {fileID: 876638804}
   m_Layer: 0
   m_Name: Network
   m_TagString: Untagged
@@ -758,6 +759,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &876638804
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 876638802}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a8783b7b8080444e80cdf734d051976, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  depotDestination: {fileID: 0}
+  Destinations: []
+  stopPrefab: {fileID: 6237143340746854489, guid: bd6b51e1b40d09740b8b30f001a58060, type: 3}
+  stopCount: 16
 --- !u!1001 &911921125
 PrefabInstance:
   m_ObjectHideFlags: 0
