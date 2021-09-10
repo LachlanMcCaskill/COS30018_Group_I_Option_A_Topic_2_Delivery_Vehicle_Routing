@@ -17,9 +17,8 @@ public class MenuHandler : MonoBehaviour
         
     }
 
-    void QuitApp()
+    public void QuitApp()
     {
-
         if (EditorApplication.isPlaying)
         {
             EditorApplication.isPlaying = false;
@@ -28,5 +27,6 @@ public class MenuHandler : MonoBehaviour
         {
             Application.Quit();
         }
+        Debug.Log("Debug: Exit button pressed.");
     }
 }
