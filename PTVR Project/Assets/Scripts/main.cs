@@ -41,8 +41,8 @@ public class main : MonoBehaviour
         transportAgents.Add(new TransportAgent(6));
 
 		// solve routes
-		Vector3 start = network.depotDestination.transform.position;
-		network.printNetwork();
+		Vector3 start = network.DepotDestination.transform.position;
+		network.PrintNetwork();
         List<Vector3> points = network.DestinationPoints;
 		int vehicleCount = transportAgents.Count();
         List<Route> routes = rs.Solve(start, points, vehicleCount);
