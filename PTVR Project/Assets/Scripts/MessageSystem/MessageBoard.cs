@@ -10,13 +10,23 @@ namespace MessageSystem
 		private static readonly Dictionary<Type,object> _actionTable = new Dictionary<Type,object>();
 
 		public static void SendMessage<T>(T message) where T : Message
-			=> GetActionsForType<T>().ForEach(action => action(message));
+		{
+			List<Action<T>> actions = GetActionsForType<T>();
+			Log.Info($"{Log.Green(Log.StackTraceFileString(2))} sending message " + Log.Yellow($"<{typeof(T).Name}>") + $" to {Log.Cyan(actions.Count)} listeners.\n{Log.ObjectToString(message)}.");
+			actions.ForEach(action => action(message));
+		}
 
 		public static void ListenForMessage<T>(Action<T> action) where T : Message
-			=> GetActionsForType<T>().Add(action);
+		{
+			Log.Info($"{Log.Green(Log.StackTraceFileString(2))} is listening for " + Log.Yellow($"<{typeof(T).Name}>") + $" with {Log.Cyan(action.Method.Name)}.");
+			GetActionsForType<T>().Add(action);
+		}
 
 		public static void StopListeningForMessage<T>(Action<T> action) where T : Message
-			=> GetActionsForType<T>().RemoveAll(a => a == action);
+		{
+			Log.Info($"{Log.Green(Log.StackTraceFileString(2))} stopped listening for " + Log.Yellow($"<{typeof(T).Name}>") + $" with {Log.Cyan(action.Method.Name)}.");
+			GetActionsForType<T>().RemoveAll(a => a == action);
+		}
 
 		private static List<Action<T>> GetActionsForType<T>() where T : Message
 		{

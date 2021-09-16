@@ -1,66 +1,108 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using MessageSystem;
-
-public class CapacityMessage : Message
-{
-    public int capacity;
-}
+using System;
+using System.Linq;
 
 public class TransportAgent : MonoBehaviour
 {
     private List<Passenger> _passengers;
     private int _capacity;
-    //private Route currentRoute = new Route();
+    private Stack<GameObject> _currentRoute = null;
+	private Color _color;
 
-    public TransportAgent(int capacity)
-    {
-        _capacity = capacity;
-    }
+	private void OnEnable()
+	{
+		MessageBoard.ListenForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
+		SendIntroductionMessage();
+		_color = _colors.Pop();
+	}
 
-    private void TravelToNextDestination()
-    {
-        //Move toward the next stop in the route
-    }
+	private void OnDisable()
+	{
+		MessageBoard.StopListeningForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
+		SendRetirementMessage();
+		_colors.Push(_color);
+	}
+
+	private void Update()
+	{
+		DebugDrawRoute();
+	}
+
+	private void DebugDrawRoute()
+	{
+		if (_currentRoute != null)
+		{
+			IEnumerable<Tuple<GameObject,GameObject>> pairs = _currentRoute.Zip(_currentRoute.Skip(1), Tuple.Create);
+			foreach((GameObject lhs, GameObject rhs) in pairs)
+			{
+				Debug.DrawLine(lhs.transform.position, rhs.transform.position, _color);
+			}
+		}
+	}
+
+	private void SendIntroductionMessage()
+	{
+		MessageBoard.SendMessage
+		(
+			new TransportAgentIntroductionMessage
+			{
+				TransportAgentId = GetInstanceID(),
+				Capacity = _capacity,
+			}		
+		);
+	}
+
+	private void SendRetirementMessage()
+	{
+		MessageBoard.SendMessage
+		(
+			new TransportAgentRetirementMessage
+			{
+				TransportAgentId = GetInstanceID(),
+			}		
+		);
+	}
 
     private void AddPassenger(Passenger p)
     {
         _passengers.Add(p);
     }
 
-    private void ArriveAtStop()
-    {
-        //stop at the current stop in the route and drop off passengers
-    }
+	private void OnTransportAgentRouteMessage(TransportAgentRouteMessage message)
+	{
+		if (message.TransportAgentId == GetInstanceID())
+		{
+			_currentRoute = message.Route;
+		}
+	}
 
-    private void AssignRoute(Route r)
-    {
-        //set the route of this agent
-    }
+	private static Stack<Color> _colors = new Stack<Color>
+	(
+		new Color[] {
+			Color.cyan,
+			Color.yellow,
+			Color.blue,
+			Color.green,
+			Color.red,
+		}
+	);
+}
 
-    private void SendCapacity()
-    {
-        //access the messaging system to send a messgae to the master routing agent containg information about this agent's capacity
-        Debug.Log("I can hold " + _capacity + " people.");	
+public class TransportAgentIntroductionMessage : Message
+{
+	public int TransportAgentId;
+	public int Capacity;
+}
 
-		// send an introduction message
-		MessageBoard.SendMessage
-        (
-            new CapacityMessage
-            {
-                capacity = _capacity,
-            }
-        );
-    }
+public class TransportAgentRetirementMessage : Message
+{
+	public int TransportAgentId;
+}
 
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
+public class TransportAgentRouteMessage : Message
+{
+	public int TransportAgentId;
+	public Stack<GameObject> Route;
 }
