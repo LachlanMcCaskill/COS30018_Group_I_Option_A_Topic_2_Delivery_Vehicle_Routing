@@ -359,10 +359,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a8783b7b8080444e80cdf734d051976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  depotDestination: {fileID: 0}
-  Destinations: []
-  stopPrefab: {fileID: 6237143340746854489, guid: bd6b51e1b40d09740b8b30f001a58060, type: 3}
-  stopCount: 16
+  StopPrefab: {fileID: 6237143340746854489, guid: bd6b51e1b40d09740b8b30f001a58060, type: 3}
+  StopCount: 16
 --- !u!1001 &1382848952
 PrefabInstance:
   m_ObjectHideFlags: 0
