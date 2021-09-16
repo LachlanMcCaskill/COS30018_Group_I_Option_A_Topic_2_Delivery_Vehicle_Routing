@@ -6,10 +6,14 @@ using System.Linq;
 
 public class TransportAgent : MonoBehaviour
 {
+	public float Speed;
+
     private List<Passenger> _passengers;
     private int _capacity;
-    private Stack<GameObject> _currentRoute = null;
+    private Stack<GameObject> _route = null;
+    private Stack<GameObject> _movementRoute = null;
 	private Color _color;
+	private Lerped<Vector3> _target = new Lerped<Vector3>(Vector3.zero, 0.0f, Easing.EaseInOut);
 
 	private void OnEnable()
 	{
@@ -27,14 +31,31 @@ public class TransportAgent : MonoBehaviour
 
 	private void Update()
 	{
+		UpdateMovement();
 		DebugDrawRoute();
+	}
+
+	private void UpdateMovement()
+	{
+		bool hasRoute = _movementRoute != null;
+		bool hasReachedDestination = _target.InterpolationComplete;
+		bool moreDestinationsExist = _movementRoute.Count != 0;
+
+		if (hasRoute && hasReachedDestination && moreDestinationsExist)
+		{
+			float distance = Vector3.Distance(_target.Value, _movementRoute.Peek().transform.position);
+			_target.Value = _movementRoute.Pop().transform.position;
+			_target.DurationSeconds = (1/Speed) * distance;
+		}
+
+		transform.position = _target.Value;
 	}
 
 	private void DebugDrawRoute()
 	{
-		if (_currentRoute != null)
+		if (_route != null)
 		{
-			IEnumerable<Tuple<GameObject,GameObject>> pairs = _currentRoute.Zip(_currentRoute.Skip(1), Tuple.Create);
+			IEnumerable<Tuple<GameObject,GameObject>> pairs = _route.Zip(_route.Skip(1), Tuple.Create);
 			foreach((GameObject lhs, GameObject rhs) in pairs)
 			{
 				Debug.DrawLine(lhs.transform.position, rhs.transform.position, _color);
@@ -72,9 +93,12 @@ public class TransportAgent : MonoBehaviour
 
 	private void OnTransportAgentRouteMessage(TransportAgentRouteMessage message)
 	{
+		_target.Value = GameObject.Find("Depot").transform.position;
+		_target.DurationSeconds = 0.0f;
 		if (message.TransportAgentId == GetInstanceID())
 		{
-			_currentRoute = message.Route;
+			_route = new Stack<GameObject>(message.Route);
+			_movementRoute = new Stack<GameObject>(message.Route);
 		}
 	}
 
