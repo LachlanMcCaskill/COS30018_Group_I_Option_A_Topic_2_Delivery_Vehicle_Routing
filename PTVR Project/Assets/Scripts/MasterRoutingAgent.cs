@@ -33,17 +33,17 @@ public class MasterRoutingAgent : MonoBehaviour
 	private void RouteAgents()
 	{
 		Log.Info("Sending route to agents...");
-		Stack<GameObject>[] routes = CreateRoutes();
+		Route[] routes = CreateRoutes();
 		SendRoutes(routes);
 		_generatedRoute = true;
 	}
 
-    private void SendRoutes(Stack<GameObject>[] routes)
+    private void SendRoutes(Route[] routes)
     {
 		for (int i=0; i<_transportAgents.Count; i++)
 		{
 			TransportAgentIntroductionMessage agent = _transportAgents[i];
-			Stack<GameObject> route = routes[i];
+			Route route = routes[i];
 
 			MessageBoard.SendMessage
 			(
@@ -56,14 +56,14 @@ public class MasterRoutingAgent : MonoBehaviour
 		}
     }
 
-    private Stack<GameObject>[] CreateRoutes()
+    private Route[] CreateRoutes()
     {
 		int transportAgentCount = _transportAgents.Count;
-		if (transportAgentCount == 0) return new Stack<GameObject>[]{};
+		if (transportAgentCount == 0) return new Route[]{};
 		Vector3 start = _transportNetwork.DepotDestination.transform.position;
         List<Vector3> points = _transportNetwork.DestinationPoints;
-        List<Route> routes = _routeSolver.Solve(start, points, transportAgentCount);
-		return routes.Select(route => _transportNetwork.ConvertRouteToDestinations(route)).ToArray();
+        List<RoutePlan> routePlans = _routeSolver.Solve(start, points, transportAgentCount);
+		return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
     }
 
 	private void OnTransportAgentIntroduction(TransportAgentIntroductionMessage message)

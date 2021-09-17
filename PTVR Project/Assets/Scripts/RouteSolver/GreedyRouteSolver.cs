@@ -7,13 +7,13 @@ namespace RouteSolver
 {
 	public class GreedyRouteSolver : IRouteSolver
 	{
-		public List<Route> Solve(Vector3 start, List<Vector3> points, int vehicleCount)
+		public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, int vehicleCount)
 		{
-			List<Route> result = new List<Route>();
+			List<RoutePlan> result = new List<RoutePlan>();
 
 			for (int i=0; i<vehicleCount; i++) 
 			{
-				Route route = new Route();
+				RoutePlan route = new RoutePlan();
 				route.Destinations.Push(start);
 				result.Add(route);
 			}
@@ -22,7 +22,7 @@ namespace RouteSolver
 			while (points.Count > 0)
 			{
 				// pick route with lowest total distance
-				Route route = result.Aggregate((cur, next) => cur.TotalDistance <= next.TotalDistance ? cur : next);
+				RoutePlan route = result.Aggregate((cur, next) => cur.TotalDistance <= next.TotalDistance ? cur : next);
 
 				// get the last point the route traveled to
 				Vector3 currentPoint = route.Destinations.Peek();
@@ -44,15 +44,20 @@ namespace RouteSolver
 			for (int i=0; i<vehicleCount; i++) 
 			{
 				// order from first to last
-				Stack<Vector3> old = result[i].Destinations;
-				result[i].Destinations = new Stack<Vector3>();
-				while (old.Count > 0) result[i].Destinations.Push(old.Pop());
+				result[i].Destinations = Reverse(result[i].Destinations);
 
 				// remove start
 				result[i].Destinations.Pop();
 			}
 
 			return result;
+		}
+
+		private Stack<T> Reverse<T>(Stack<T> stack)
+		{
+			Stack<T> reversed = new Stack<T>();
+			while (stack.Count > 0) reversed.Push(stack.Pop());
+			return reversed;
 		}
 	}
 }

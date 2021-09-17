@@ -38,24 +38,24 @@ public class TransportNetwork : MonoBehaviour
 
 	public List<Vector3> DestinationPoints => Destinations.Select(destination => destination.transform.position).ToList();
 
-	public Stack<GameObject> ConvertRouteToDestinations(Route route) 
+	public Route CreateRouteFromPlan(RoutePlan routePlan) 
 	{
-		Stack<GameObject> destinations = new Stack<GameObject>();
+		Route route = new Route();
 
 		// add depot to stack as start
-		destinations.Push(DepotDestination);
+		route.Destinations.Push(DepotDestination);
 		
 		// add destinations to stack
-		IEnumerable<GameObject> routeObjs = route.Destinations.Select(point => Destinations.First(destination => destination.transform.position == point));
+		IEnumerable<GameObject> routeObjs = routePlan.Destinations.Select(point => Destinations.First(destination => destination.transform.position == point));
 		foreach (GameObject obj in routeObjs)
 		{
-			destinations.Push(obj);
+			route.Destinations.Push(obj);
 		}
 
 		// add depot to stack as end
-		destinations.Push(DepotDestination);
+		route.Destinations.Push(DepotDestination);
 
-		return destinations;
+		return route;
 	}
 
 	public void PrintNetwork()

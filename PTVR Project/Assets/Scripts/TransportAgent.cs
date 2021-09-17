@@ -10,8 +10,8 @@ public class TransportAgent : MonoBehaviour
 
     private List<Passenger> _passengers;
     private int _capacity;
-    private Stack<GameObject> _route = null;
-    private Stack<GameObject> _movementRoute = null;
+    private Route _route = null;
+    private Route _movementRoute = null;
 	private Color _color;
 	private Lerped<Vector3> _target = new Lerped<Vector3>(Vector3.zero, 0.0f, Easing.EaseInOut);
 
@@ -39,12 +39,13 @@ public class TransportAgent : MonoBehaviour
 	{
 		bool hasRoute = _movementRoute != null;
 		bool hasReachedDestination = _target.InterpolationComplete;
-		bool moreDestinationsExist = _movementRoute.Count != 0;
+		bool moreDestinationsExist = _movementRoute.Destinations.Count != 0;
 
 		if (hasRoute && hasReachedDestination && moreDestinationsExist)
 		{
-			float distance = Vector3.Distance(_target.Value, _movementRoute.Peek().transform.position);
-			_target.Value = _movementRoute.Pop().transform.position;
+			Vector3 next = _movementRoute.Destinations.Pop().transform.position;
+			float distance = Vector3.Distance(_target.Value, next);
+			_target.Value = next;
 			_target.DurationSeconds = (1/Speed) * distance;
 		}
 
@@ -55,7 +56,7 @@ public class TransportAgent : MonoBehaviour
 	{
 		if (_route != null)
 		{
-			IEnumerable<Tuple<GameObject,GameObject>> pairs = _route.Zip(_route.Skip(1), Tuple.Create);
+			IEnumerable<Tuple<GameObject,GameObject>> pairs = _route.Destinations.Zip(_route.Destinations.Skip(1), Tuple.Create);
 			foreach((GameObject lhs, GameObject rhs) in pairs)
 			{
 				Debug.DrawLine(lhs.transform.position, rhs.transform.position, _color);
@@ -97,8 +98,8 @@ public class TransportAgent : MonoBehaviour
 		_target.DurationSeconds = 0.0f;
 		if (message.TransportAgentId == GetInstanceID())
 		{
-			_route = new Stack<GameObject>(message.Route);
-			_movementRoute = new Stack<GameObject>(message.Route);
+			_route = message.Route.Copy();
+			_movementRoute = message.Route.Copy();
 		}
 	}
 
@@ -128,5 +129,5 @@ public class TransportAgentRetirementMessage : Message
 public class TransportAgentRouteMessage : Message
 {
 	public int TransportAgentId;
-	public Stack<GameObject> Route;
+	public Route Route;
 }
