@@ -56,7 +56,7 @@ public class main : MonoBehaviour
 
 	private void Update()
 	{
-		for (int i=0; i<_routes.Count; i++)
+		/*for (int i=0; i<_routes.Count; i++)
 		{
 			List<GameObject> route = _routes[i];
 			Color color = _colors[i];
@@ -66,6 +66,6 @@ public class main : MonoBehaviour
 			{
 				Debug.DrawLine(lhs.transform.position, rhs.transform.position, color);
 			}
-		}
+		}*/
 	}
 }

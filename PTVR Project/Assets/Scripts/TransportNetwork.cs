@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class TransportNetwork : MonoBehaviour
 {
@@ -21,7 +22,7 @@ public class TransportNetwork : MonoBehaviour
 			Destinations = new GameObject[StopCount];
 			for(int i = 0; i<StopCount; i++)
 			{
-				Vector3 randomPosition = new Vector3(Random.Range(0f, 100f), 0f, Random.Range(0f, 100f));
+				Vector3 randomPosition = new Vector3(UnityEngine.Random.Range(0f, 100f), 0f, UnityEngine.Random.Range(0f, 100f));
 				GameObject destinationToAdd = Instantiate(StopPrefab, randomPosition, Quaternion.identity);
 				destinationToAdd.name = (i+1).ToString();
 				Destinations[i] = destinationToAdd;
@@ -35,6 +36,12 @@ public class TransportNetwork : MonoBehaviour
 		{
 			StopCount = Destinations.Length;
 		}
+	}
+
+	public void randomiseNetwork()
+	{
+		deleteNetwork();
+		InitialiseNetwork();
 	}
 
     public TransportNetwork()
@@ -66,6 +73,23 @@ public class TransportNetwork : MonoBehaviour
 		if(Destinations.Length == 0)
 		{
 			Debug.Log("No destinations to print!");
+		}
+	}
+
+	private void deleteNetwork()
+	{
+		List<GameObject> stopsToDelete = new List<GameObject>();
+
+		for(int i = 0; i<Destinations.Length; i++)
+		{
+			stopsToDelete.Add(Destinations[i]);
+		}
+
+		Array.Clear(Destinations, 0, Destinations.Length);
+
+		foreach(GameObject g in stopsToDelete)
+		{
+			Destroy(g);
 		}
 	}
 }
