@@ -10,11 +10,23 @@ public class DestinationMessage : Message
 
 public class Passenger : MonoBehaviour
 {
+    string type;
     private GameObject _intendedDestination;
+
+    public bool IsSpecial()
+    {
+        return type == "special";
+    }
 
     public Passenger(GameObject destinationToSet)
     {
         _intendedDestination = destinationToSet;
+
+        if (Random.Range(0, 1f) < 0.15f)
+        {
+            type = "special";
+        }
+        else type = "normal";
     }
 
     public void sendDestination()
