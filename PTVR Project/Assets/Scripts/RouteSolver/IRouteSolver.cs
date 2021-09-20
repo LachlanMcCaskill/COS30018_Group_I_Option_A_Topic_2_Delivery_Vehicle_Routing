@@ -5,6 +5,6 @@ namespace RouteSolver
 {
 	interface IRouteSolver
 	{
-		public List<Route> Solve(Vector3 start, List<Vector3> points, int vehicleCount);
+		public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, int vehicleCount);
 	}
 }

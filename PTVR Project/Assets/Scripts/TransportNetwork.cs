@@ -9,9 +9,8 @@ public class TransportNetwork : MonoBehaviour
     public GameObject[] Destinations { get; private set; }
     public GameObject DepotDestination { get; private set; }
 
-	public void InitialiseNetwork()
+	public void Start()
 	{
-		//Debug.Log("Initialised Transport Network Values");
 		DepotDestination = GameObject.Find("Depot");
 		Destinations = GameObject.FindGameObjectsWithTag("Stop");
 
@@ -29,7 +28,7 @@ public class TransportNetwork : MonoBehaviour
 		}
 		else if(Destinations.Length == 0 && StopPrefab == null)
 		{
-			Debug.Log("Could not find any stops in the scene and could not find a prefab to generate a network with.");
+			Log.Info("Could not find any stops in the scene and could not find a prefab to generate a network with.");
 		}
 		else
 		{
@@ -37,35 +36,37 @@ public class TransportNetwork : MonoBehaviour
 		}
 	}
 
-    public TransportNetwork()
-    {
-		
-    }
-
 	public List<Vector3> DestinationPoints => Destinations.Select(destination => destination.transform.position).ToList();
 
-	public List<GameObject> ConvertRouteToDestinations(Route route) 
+	public Route CreateRouteFromPlan(RoutePlan routePlan) 
 	{
-		List<GameObject> destinations = route.Destinations
-			.Select(point => Destinations.First(destination => destination.transform.position == point))
-			.ToList();
-		
-		// add begining and end
-		destinations.Insert(0, DepotDestination);
-		destinations.Add(DepotDestination);
+		Route route = new Route();
 
-		return destinations;
+		// add depot to stack as start
+		route.Destinations.Push(DepotDestination);
+		
+		// add destinations to stack
+		IEnumerable<GameObject> routeObjs = routePlan.Destinations.Select(point => Destinations.First(destination => destination.transform.position == point));
+		foreach (GameObject obj in routeObjs)
+		{
+			route.Destinations.Push(obj);
+		}
+
+		// add depot to stack as end
+		route.Destinations.Push(DepotDestination);
+
+		return route;
 	}
 
 	public void PrintNetwork()
 	{
 		foreach(GameObject g in Destinations)
 		{
-			Debug.Log(g.name);
+			Log.Info(g.name);
 		}
 		if(Destinations.Length == 0)
 		{
-			Debug.Log("No destinations to print!");
+			Log.Info("No destinations to print!");
 		}
 	}
 }
