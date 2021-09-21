@@ -10,7 +10,10 @@ namespace GeneticAlgorithmMTSP
 
     class Program
     {
-        const int selectionSize = 50;   // takes a random selection of population then finds fittest member of that selection
+        const int selectionSize = 20;   // takes a random selection of population then finds fittest member of that selection
+        const int defaultPoints = 100;   // takes a random selection of population then finds fittest member of that selection
+        const int defaultPopulation = 100;   // takes a random selection of population then finds fittest member of that selection
+        const int defaultGenerations = 500;   // takes a random selection of population then finds fittest member of that selection
 
         //  this is the fitness test, these are the important parts (assuming the rest works)
         static Route[] GetParents(Route[] routes, Random r)
@@ -159,9 +162,9 @@ namespace GeneticAlgorithmMTSP
         {
             //  points, population, generation 
             int input = 0;
-            int numberPoints = 100;
-            int numberGenerations = 1000;
-            int numberPopulation = 1000;
+            int numberPoints = defaultPoints;
+            int numberGenerations = defaultGenerations;
+            int numberPopulation = defaultPopulation;
             int[] vars = new int[] { numberPoints, numberPopulation, numberGenerations };
             Console.WriteLine("Enter number of points: (Enter 0 for defaults)");
             input = int.Parse(Console.ReadLine());
