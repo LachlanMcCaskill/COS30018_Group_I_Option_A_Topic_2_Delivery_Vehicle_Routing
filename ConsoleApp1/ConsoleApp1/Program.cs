@@ -10,12 +10,12 @@ namespace GeneticAlgorithmMTSP
 
     class Program
     {
-        const int selectionSize = 20;
+        const int selectionSize = 50;   // takes a random selection of population then finds fittest member of that selection
 
         //  this is the fitness test, these are the important parts (assuming the rest works)
         static Route[] GetParents(Route[] routes, Random r)
         {
-            int size = Math.Min(selectionSize, routes.Length / 2);
+            int size = Math.Min(selectionSize, routes.Length / 5);
             int[][] selection = PopulationSelection(0, routes.Length, size, r);
 
             Route mother = GetFittestRouteFromRandomSelection(routes, selection[0]);

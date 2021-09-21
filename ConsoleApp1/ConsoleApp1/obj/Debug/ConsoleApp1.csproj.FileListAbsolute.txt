@@ -5,3 +5,10 @@ C:\Users\Computer\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csp
 C:\Users\Computer\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CoreCompileInputs.cache
 C:\Users\Computer\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
 C:\Users\Computer\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csprojAssemblyReference.cache
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.csproj.CoreCompileInputs.cache
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
