@@ -7,15 +7,21 @@ namespace RouteSolver
     {
         public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, int vehicleCount)
         {
-            List<RoutePlan> result = new List<RoutePlan>();
-            List<Vector3> pointsToSet = new List<Vector3>();
+            /*foreach(Vector3 p in points)
+            {
+                Debug.Log(p.ToString());
+            }*/
 
-            points.CopyTo(pointsToSet.ToArray());
+            //Debug.Log(start.ToString());
+
+            List<RoutePlan> result = new List<RoutePlan>();
+            List<Vector3> pointsToSet = new List<Vector3>(points);
 
 			for (int i=0; i<vehicleCount; i++) 
 			{
 				RoutePlan route = new RoutePlan();
 				route.Destinations.Push(start);
+                //Debug.Log("Added: " + start.ToString());
 				result.Add(route);
 			}
 
@@ -39,9 +45,10 @@ namespace RouteSolver
                         }
                     }
 
-                    if(pointToSet != Vector3.zero)
+                    if(pointToSet != Vector3.zero && pointsToSet != null && pointsToSet.Count != 0)
                     {
                         r.Destinations.Push(pointToSet);
+                        //Debug.Log("Added: " + pointsToSet.ToString());
                         pointsToSet.Remove(pointToSet);
                         shortestDistance = Mathf.Infinity;
                         currentDistance = 0;
@@ -49,7 +56,36 @@ namespace RouteSolver
                 }
             }
 
+            /*foreach(RoutePlan r in result)
+            {
+                foreach(Vector3 p in r.Destinations)
+                {
+                    if(!points.Contains(p))
+                    {
+                        Debug.Log("ERROR: One or more of the points in result is not on the map.");
+                        Debug.Log("Point: " + p.ToString() + " is not in the world.");
+                    }
+                }
+            }*/
+
+            // final pass
+			for (int i=0; i<vehicleCount; i++) 
+			{
+				// order from first to last
+				result[i].Destinations = Reverse(result[i].Destinations);
+
+				// remove start
+				result[i].Destinations.Pop();
+			}
+
             return result;
+        }
+
+        private Stack<T> Reverse<T>(Stack<T> stack)
+        {
+            Stack<T> reversed = new Stack<T>();
+            while (stack.Count > 0) reversed.Push(stack.Pop());
+            return reversed;
         }
     }
 }
