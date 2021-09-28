@@ -8,12 +8,17 @@ public class DestinationMessage : Message
 
 public class Passenger : MonoBehaviour
 {
-    private GameObject _intendedDestination;
+    [SerializeField]private GameObject _intendedDestination;
 
     public Passenger(GameObject destinationToSet)
     {
         _intendedDestination = destinationToSet;
     }
+
+    private void OnEnable()
+	{
+		sendDestination();
+	}
 
     public void sendDestination()
     {
