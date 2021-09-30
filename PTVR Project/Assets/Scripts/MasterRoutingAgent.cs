@@ -63,7 +63,7 @@ public class MasterRoutingAgent : MonoBehaviour
 		if (transportAgentCount == 0) return new Route[]{};
 		Vector3 start = _transportNetwork.DepotDestination.transform.position;
         List<Vector3> points = _transportNetwork.DestinationPoints;
-        List<RoutePlan> routePlans = _routeSolver.Solve(start, points, transportAgentCount);
+        List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents);
 		return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
     }
 
