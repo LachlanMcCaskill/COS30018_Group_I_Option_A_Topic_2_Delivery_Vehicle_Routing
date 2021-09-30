@@ -7,11 +7,11 @@ namespace RouteSolver
 {
 	public class GreedyRouteSolver : IRouteSolver
 	{
-		public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, int vehicleCount)
+		public List<RoutePlan> Solve(Vector3 start, List<Vector3> points,  List<TransportAgentIntroductionMessage> agentsWithCapacities)
 		{
 			List<RoutePlan> result = new List<RoutePlan>();
 
-			for (int i=0; i<vehicleCount; i++) 
+			for (int i=0; i<agentsWithCapacities.Count; i++) 
 			{
 				RoutePlan route = new RoutePlan();
 				route.Destinations.Push(start);
@@ -41,7 +41,7 @@ namespace RouteSolver
 			}
 
 			// final pass
-			for (int i=0; i<vehicleCount; i++) 
+			for (int i=0; i<agentsWithCapacities.Count; i++) 
 			{
 				// order from first to last
 				result[i].Destinations = Reverse(result[i].Destinations);
