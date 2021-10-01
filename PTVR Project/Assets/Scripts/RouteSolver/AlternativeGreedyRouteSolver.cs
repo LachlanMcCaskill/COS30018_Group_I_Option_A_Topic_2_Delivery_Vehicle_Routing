@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RouteSolver
 {
-	public class ConstraintAlgorithm : IRouteSolver
+	public class AlternativeGreedyRouteSolver : IRouteSolver
     {
         public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, List<TransportAgentIntroductionMessage> agentsWithCapacities)
         {
@@ -57,7 +57,7 @@ namespace RouteSolver
 				// remove start
 				result[i].Destinations.Pop();
 			}
-            
+
             return result;
         }
 
