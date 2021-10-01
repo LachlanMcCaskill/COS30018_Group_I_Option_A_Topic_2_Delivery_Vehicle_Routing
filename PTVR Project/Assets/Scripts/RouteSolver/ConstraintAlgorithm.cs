@@ -5,39 +5,29 @@ namespace RouteSolver
 {
 	public class ConstraintAlgorithm : IRouteSolver
     {
-        public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, int vehicleCount)
+        public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, List<TransportAgentIntroductionMessage> agentsWithCapacities)
         {
-            /*foreach(Vector3 p in points)
-            {
-                Debug.Log(p.ToString());
-            }*/
-
-            //Debug.Log(start.ToString());
-
             List<RoutePlan> result = new List<RoutePlan>();
+            //copy points to another list so we can keep track of the points we've added to routes
             List<Vector3> pointsToSet = new List<Vector3>(points);
 
-			for (int i=0; i<vehicleCount; i++) 
-			{
-				RoutePlan route = new RoutePlan();
-				route.Destinations.Push(start);
-                //Debug.Log("Added: " + start.ToString());
-				result.Add(route);
-			}
-
+            //variables for finding the shortest distance
             float shortestDistance = Mathf.Infinity;
             float currentDistance = 0;
             Vector3 pointToSet = Vector3.zero;
 
-            foreach(RoutePlan r in result)
+            //loop for each agent that has sent a message, using it's capacity to generate a route.
+            foreach(TransportAgentIntroductionMessage t in agentsWithCapacities)
             {
-                //get the most recent destination and compare distance with every other destination in the scene
-                for(int i = 0; i<3; i++) //don't know the capacity of each agent, so assume it is three for each one
+                //create the route and add the first point to the results
+                RoutePlan route = new RoutePlan();
+                route.Destinations.Push(start);
+                for(int i = 0; i<t.Capacity; i++)
                 {
                     foreach(Vector3 p in pointsToSet)
                     {
                         //calculate the distance beteween the top item of the stack and all the points
-                        currentDistance = Vector3.Distance(r.Destinations.Peek(), p);
+                        currentDistance = Vector3.Distance(route.Destinations.Peek(), p);
                         if(currentDistance < shortestDistance)
                         {
                             pointToSet = p;
@@ -45,31 +35,21 @@ namespace RouteSolver
                         }
                     }
 
+                    //Push the new point to our route if it is the shortest, remove it from the list of points so we can't accidentally add it again
                     if(pointToSet != Vector3.zero && pointsToSet != null && pointsToSet.Count != 0)
                     {
-                        r.Destinations.Push(pointToSet);
+                        route.Destinations.Push(pointToSet);
                         //Debug.Log("Added: " + pointsToSet.ToString());
                         pointsToSet.Remove(pointToSet);
                         shortestDistance = Mathf.Infinity;
                         currentDistance = 0;
                     }
                 }
+                result.Add(route);
             }
 
-            /*foreach(RoutePlan r in result)
-            {
-                foreach(Vector3 p in r.Destinations)
-                {
-                    if(!points.Contains(p))
-                    {
-                        Debug.Log("ERROR: One or more of the points in result is not on the map.");
-                        Debug.Log("Point: " + p.ToString() + " is not in the world.");
-                    }
-                }
-            }*/
-
             // final pass
-			for (int i=0; i<vehicleCount; i++) 
+			for (int i=0; i<agentsWithCapacities.Count; i++) 
 			{
 				// order from first to last
 				result[i].Destinations = Reverse(result[i].Destinations);
@@ -77,7 +57,7 @@ namespace RouteSolver
 				// remove start
 				result[i].Destinations.Pop();
 			}
-
+            
             return result;
         }
 
