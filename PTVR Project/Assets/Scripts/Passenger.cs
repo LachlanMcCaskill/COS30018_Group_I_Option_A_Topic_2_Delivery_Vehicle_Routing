@@ -22,7 +22,7 @@ public class Passenger : MonoBehaviour
 
     public void sendDestination()
     {
-        Debug.Log("I want to go to point" + _intendedDestination.name + ".");	
+        Debug.Log("My name is "+gameObject.name+" and I want to go to point" + _intendedDestination.name + ".");	
 
 		// send an introduction message
 		MessageBoard.SendMessage
