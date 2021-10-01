@@ -14,10 +14,14 @@ namespace RouteSolver
 			_innerSolver = innerSolver;
 		}
 
-		public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, int vehicleCount)
+		public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, List<TransportAgentIntroductionMessage> introductionMessages)
 		{
-			List<List<Vector3>> clusters = GroupPointsIntoClusters(points, vehicleCount);
-			return clusters.Select(cluster => _innerSolver.Solve(start, cluster, 1)[0]).ToList();
+			var clusters = GroupPointsIntoClusters(points, introductionMessages.Count);
+			var agents = introductionMessages.Select(agent => new List<TransportAgentIntroductionMessage>{agent});
+			return clusters
+				.Zip(agents, Tuple.Create) // pair each agent with a cluster
+				.Select(pair => _innerSolver.Solve(start, pair.Item1, pair.Item2)[0]) // solve each agent-cluster pair individually
+				.ToList();
 		}
 
 		private List<List<Vector3>> GroupPointsIntoClusters(List<Vector3> points, int clusterCount)
