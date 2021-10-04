@@ -70,8 +70,11 @@ public class MasterRoutingAgent : MonoBehaviour
 		{
 			foreach(DestinationMessage p in _passengerData)
 			{
-				points.Add(p.destination.transform.position);
-				Debug.Log("Added: "+p.destination.transform.position.ToString()+" to destinations.");
+				if(!points.Contains(p.destination.transform.position))
+				{
+					points.Add(p.destination.transform.position);
+					Debug.Log("Added: "+p.destination.transform.position.ToString()+" to destinations.");
+				}
 			}
 			List<RoutePlan> routePlans = _routeSolver.Solve(start, points, transportAgentCount);
 			return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
