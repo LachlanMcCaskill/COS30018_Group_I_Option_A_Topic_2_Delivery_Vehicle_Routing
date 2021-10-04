@@ -61,7 +61,13 @@ public class TransportAgent : MonoBehaviour
 			{
 				Debug.DrawLine(lhs.transform.position, rhs.transform.position, _color);
 			}
+			DisplayCost();
 		}
+	}
+
+	private void DisplayCost()
+	{
+		SendCostMessage();
 	}
 
 	private void SendIntroductionMessage()
@@ -84,6 +90,18 @@ public class TransportAgent : MonoBehaviour
 			{
 				TransportAgentId = GetInstanceID(),
 			}		
+		);
+	}
+
+	private void SendCostMessage()
+	{
+		MessageBoard.SendMessage
+		(
+			new TransportAgentCostMessage
+			{
+				routeColour = _color,
+				cost = _route.TotalDistance,
+			}
 		);
 	}
 
@@ -130,4 +148,10 @@ public class TransportAgentRouteMessage : Message
 {
 	public int TransportAgentId;
 	public Route Route;
+}
+
+public class TransportAgentCostMessage : Message
+{
+	public float cost;
+	public Color routeColour;
 }
