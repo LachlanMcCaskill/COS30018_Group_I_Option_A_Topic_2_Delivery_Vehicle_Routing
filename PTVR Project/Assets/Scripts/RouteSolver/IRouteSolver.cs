@@ -3,8 +3,8 @@ using UnityEngine;
 
 namespace RouteSolver
 {
-	interface IRouteSolver
+	public interface IRouteSolver
 	{
-		public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, int vehicleCount);
+		public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, List<TransportAgentIntroductionMessage> agentsWithCapacities);
 	}
 }

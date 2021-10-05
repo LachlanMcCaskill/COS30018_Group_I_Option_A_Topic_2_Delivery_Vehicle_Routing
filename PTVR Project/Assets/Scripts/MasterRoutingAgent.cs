@@ -63,8 +63,8 @@ public class MasterRoutingAgent : MonoBehaviour
     {
 		int transportAgentCount = _transportAgents.Count;
 		if (transportAgentCount == 0) return new Route[]{};
+
 		Vector3 start = _transportNetwork.DepotDestination.transform.position;
-        //List<Vector3> points = _transportNetwork.DestinationPoints;
 		List<Vector3> points = new List<Vector3>();
 		if(_passengerData.Count > 0)
 		{
@@ -76,7 +76,7 @@ public class MasterRoutingAgent : MonoBehaviour
 					Debug.Log("Added: "+p.destination.transform.position.ToString()+" to destinations.");
 				}
 			}
-			List<RoutePlan> routePlans = _routeSolver.Solve(start, points, transportAgentCount);
+			List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents);
 			return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
 		}
 		else
