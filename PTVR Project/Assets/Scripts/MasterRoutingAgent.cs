@@ -9,10 +9,12 @@ public class MasterRoutingAgent : MonoBehaviour
     private IRouteSolver _routeSolver;
     private TransportNetwork _transportNetwork;
 	private List<TransportAgentIntroductionMessage> _transportAgents = new List<TransportAgentIntroductionMessage>();
+	private List<DestinationMessage> _passengerData = new List<DestinationMessage>();
 	private bool _generatedRoute = false;
 
 	private void OnEnable()
 	{
+		MessageBoard.ListenForMessage<DestinationMessage>(OnPassengerIntroduction);
 		MessageBoard.ListenForMessage<TransportAgentIntroductionMessage>(OnTransportAgentIntroduction);
 		MessageBoard.ListenForMessage<TransportAgentRetirementMessage>(OnTransportAgentRetirement);
 	}
@@ -21,11 +23,13 @@ public class MasterRoutingAgent : MonoBehaviour
 	{
 		MessageBoard.StopListeningForMessage<TransportAgentIntroductionMessage>(OnTransportAgentIntroduction);
 		MessageBoard.StopListeningForMessage<TransportAgentRetirementMessage>(OnTransportAgentRetirement);
+		//MessageBoard.StopListeningForMessage<DestinationMessage>(OnPassengerIntroduction);
 	}
 
     private void Start()
     {
-		_routeSolver = new GreedyRouteSolver();
+		//_routeSolver = new GreedyRouteSolver();
+		_routeSolver = new ConstraintAlgorithm();
 		_transportNetwork = GameObject.Find("Network").GetComponent<TransportNetwork>();
 		RouteAgents();
     }
@@ -60,10 +64,27 @@ public class MasterRoutingAgent : MonoBehaviour
     {
 		int transportAgentCount = _transportAgents.Count;
 		if (transportAgentCount == 0) return new Route[]{};
+
 		Vector3 start = _transportNetwork.DepotDestination.transform.position;
-        List<Vector3> points = _transportNetwork.DestinationPoints;
-        List<RoutePlan> routePlans = _routeSolver.Solve(start, points, transportAgentCount);
-		return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
+		List<Vector3> points = new List<Vector3>();
+		if(_passengerData.Count > 0)
+		{
+			foreach(DestinationMessage p in _passengerData)
+			{
+				if(!points.Contains(p.destination.transform.position))
+				{
+					points.Add(p.destination.transform.position);
+					Debug.Log("Added: "+p.destination.transform.position.ToString()+" to destinations.");
+				}
+			}
+			List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents);
+			return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
+		}
+		else
+		{
+			Debug.Log("No passengers for which to create routes for.");
+			return null;
+		}
     }
 
 	private void OnTransportAgentIntroduction(TransportAgentIntroductionMessage message)
@@ -81,5 +102,10 @@ public class MasterRoutingAgent : MonoBehaviour
 
 		// regenerate route when an agent retires
 		if (_generatedRoute) RouteAgents();
+	}
+
+	private void OnPassengerIntroduction(DestinationMessage message)
+	{
+		_passengerData.Add(message);
 	}
 }
