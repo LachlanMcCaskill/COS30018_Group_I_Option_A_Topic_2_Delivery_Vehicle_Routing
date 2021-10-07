@@ -15,6 +15,8 @@ public class TransportAgent : MonoBehaviour
 	private Color _color;
 	private Lerped<Vector3> _target = new Lerped<Vector3>(Vector3.zero, 0.0f, Easing.EaseInOut);
 
+	private bool messageSent = false;
+
 	private void OnEnable()
 	{
 		MessageBoard.ListenForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
@@ -61,13 +63,17 @@ public class TransportAgent : MonoBehaviour
 			{
 				Debug.DrawLine(lhs.transform.position, rhs.transform.position, _color);
 			}
-			DisplayCost();
+			if(!messageSent)
+			{
+				DisplayCost();
+			}
 		}
 	}
 
 	private void DisplayCost()
 	{
-		SendCostMessage();
+		SendCostMessage(_route.TotalDistance); //this can be any numeric value
+		messageSent = true;
 	}
 
 	private void SendIntroductionMessage()
@@ -93,14 +99,14 @@ public class TransportAgent : MonoBehaviour
 		);
 	}
 
-	private void SendCostMessage()
+	private void SendCostMessage(float routecost)
 	{
 		MessageBoard.SendMessage
 		(
 			new TransportAgentCostMessage
 			{
 				routeColour = _color,
-				cost = _route.TotalDistance,
+				cost = routecost,
 			}
 		);
 	}
