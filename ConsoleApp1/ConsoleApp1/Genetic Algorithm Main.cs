@@ -199,7 +199,7 @@ namespace GeneticAlgorithmMTSP
             int numberGenerations = defaultGenerations;
             int numberPopulation = defaultPopulation;
             int numberBuses = defaultBuses;
-            int[] vars = new int[] { numberPoints, numberPopulation, numberGenerations };
+            int[] vars = new int[] { numberPoints, numberPopulation, numberGenerations, numberBuses };
             Console.WriteLine("Enter number of points: Enter 0 for defaults (Points: " + defaultPoints + ", Population: " + defaultPopulation +
                 ", Generations: " + defaultGenerations + ", Buses: " + defaultBuses + ", Selection size: " + selectionSize + ")");
 

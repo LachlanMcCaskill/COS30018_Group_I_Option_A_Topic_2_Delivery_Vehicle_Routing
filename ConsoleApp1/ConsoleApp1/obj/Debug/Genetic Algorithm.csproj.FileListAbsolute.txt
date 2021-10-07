@@ -1,0 +1,11 @@
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.manifest
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.application
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\obj\Debug\Genetic Algorithm.csprojAssemblyReference.cache
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\obj\Debug\Genetic Algorithm.csproj.CoreCompileInputs.cache
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe.manifest
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.application
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+C:\Users\Computer\Documents\GitHub\COS30018_Group_I_Option_A_Topic_2_Delivery_Vehicle_Routing\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
