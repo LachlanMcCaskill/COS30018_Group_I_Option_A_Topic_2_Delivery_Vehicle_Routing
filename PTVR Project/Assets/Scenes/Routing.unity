@@ -1428,7 +1428,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7835465258396288029, guid: fa2520238e72d9046a1f1592ea7d1a61, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: QuitApp
+      value: back
       objectReference: {fileID: 0}
     - target: {fileID: 7843392384786459400, guid: fa2520238e72d9046a1f1592ea7d1a61, type: 3}
       propertyPath: m_AnchorMax.y
