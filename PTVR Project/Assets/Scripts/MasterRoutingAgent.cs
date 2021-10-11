@@ -29,7 +29,7 @@ public class MasterRoutingAgent : MonoBehaviour
     private void Start()
     {
 		//_routeSolver = new GreedyRouteSolver();
-		_routeSolver = new ConstraintAlgorithm();
+		_routeSolver = new AlternativeGreedyRouteSolver();
 		_transportNetwork = GameObject.Find("Network").GetComponent<TransportNetwork>();
 		RouteAgents();
     }
