@@ -63,7 +63,6 @@ public class UIHandler : MonoBehaviour
 
     public void back()
     {
-        Debug.Log("Button works");
         UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
     }
 }
