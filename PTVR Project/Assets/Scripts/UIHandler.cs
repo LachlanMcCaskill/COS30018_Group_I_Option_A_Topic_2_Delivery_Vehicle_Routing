@@ -21,18 +21,6 @@ public class UIHandler : MonoBehaviour
         MessageBoard.StopListeningForMessage<TransportAgentCostMessage>(OnCostMessageStopListening);
     }
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void DisplayRouteCosts()
     {
         foreach(TransportAgentCostMessage c in _routeCosts)
@@ -71,5 +59,11 @@ public class UIHandler : MonoBehaviour
             Application.Quit();
         }
         Debug.Log("Debug: Exit button pressed.");
+    }
+
+    public void back()
+    {
+        Debug.Log("Button works");
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
     }
 }
