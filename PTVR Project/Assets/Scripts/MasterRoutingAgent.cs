@@ -28,10 +28,35 @@ public class MasterRoutingAgent : MonoBehaviour
 
     private void Start()
     {
-		//_routeSolver = new GreedyRouteSolver();
-		_routeSolver = new ConstraintAlgorithm();
-		_transportNetwork = GameObject.Find("Network").GetComponent<TransportNetwork>();
-		RouteAgents();
+		if(PlayerPrefs.HasKey("RoutingStrategy"))
+		{
+			switch(PlayerPrefs.GetString("RoutingStrategy"))
+			{
+				case "Greedy1": 
+					_routeSolver = new GreedyRouteSolver();
+					break;
+				case "Greedy2": 
+					_routeSolver = new AlternativeGreedyRouteSolver();
+					break;
+				case "KMeans1":
+					_routeSolver = new KMeansClusterRouteSolver(new GreedyRouteSolver());
+					break;
+				case "KMeans2":
+					_routeSolver = new KMeansClusterRouteSolver(new AlternativeGreedyRouteSolver());
+					break;
+				/*case "GA":
+					_routeSolver = new GeneticAlgorithm();
+					break;*/
+				default:
+					break;
+			}
+			_transportNetwork = GameObject.Find("Network").GetComponent<TransportNetwork>();
+			RouteAgents();
+		}
+		else
+		{
+			Debug.Log("Player prefs not set. If you're seeing this in unity, start the game from the main scene");
+		}	
     }
 
 	private void RouteAgents()
