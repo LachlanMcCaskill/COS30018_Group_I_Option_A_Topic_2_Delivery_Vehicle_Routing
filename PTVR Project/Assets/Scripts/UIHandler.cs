@@ -18,7 +18,7 @@ public class UIHandler : MonoBehaviour
 
     private void OnDisable()
     {
-        MessageBoard.StopListeningForMessage<TransportAgentCostMessage>(OnCostMessageStopListening);
+        MessageBoard.StopListeningForMessage<TransportAgentCostMessage>(OnCostMessageRecieved);
     }
 
     private void DisplayRouteCosts()
@@ -42,10 +42,11 @@ public class UIHandler : MonoBehaviour
         CreateCostPanel(m.cost, m.routeColour);
     }
 
-    private void OnCostMessageStopListening(TransportAgentCostMessage m)
-    {
-        _routeCosts.Remove(m);
-    }
+	// NOTE(Andrew): this is probably no longer necessary?
+    // private void OnCostMessageStopListening(TransportAgentCostMessage m)
+    // {
+    // 	 _routeCosts.Remove(m);
+    // }
 
     //button methods
     public void QuitApp()
