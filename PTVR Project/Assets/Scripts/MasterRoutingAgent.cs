@@ -25,8 +25,9 @@ public class MasterRoutingAgent : MonoBehaviour
 
     private void Start()
     {
-		_routeSolver = new GreedyRouteSolver();
-		_transportNetwork = GameObject.Find("Network").GetComponent<TransportNetwork>();
+        //  _routeSolver = new GreedyRouteSolver();
+        _routeSolver = new GeneticRouteSolver();
+        _transportNetwork = GameObject.Find("Network").GetComponent<TransportNetwork>();
 		RouteAgents();
     }
 

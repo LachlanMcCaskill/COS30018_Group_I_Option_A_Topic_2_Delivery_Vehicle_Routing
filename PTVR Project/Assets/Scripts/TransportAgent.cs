@@ -9,7 +9,7 @@ public class TransportAgent : MonoBehaviour
 	public float Speed;
 
     private List<Passenger> _passengers;
-    private int _capacity;
+    private int _capacity = 6;  // agents weren't assigned capacity
     private Route _route = null;
     private Route _movementRoute = null;
 	private Color _color;
