@@ -1048,6 +1048,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4997511700229235325, guid: 28a56e5acea619f4e9c558d85e9d212b, type: 3}
+      propertyPath: _capacity
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6237143340746854489, guid: 28a56e5acea619f4e9c558d85e9d212b, type: 3}
       propertyPath: m_Name
       value: TransportAgent 2
@@ -2114,6 +2118,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -4997511700229235325, guid: 28a56e5acea619f4e9c558d85e9d212b, type: 3}
+      propertyPath: _capacity
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6237143340746854489, guid: 28a56e5acea619f4e9c558d85e9d212b, type: 3}
       propertyPath: m_Name
       value: TransportAgent 1
