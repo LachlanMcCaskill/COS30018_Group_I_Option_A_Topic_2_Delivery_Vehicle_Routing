@@ -146,6 +146,41 @@ namespace RouteSolver
             }
         }
 
+        public List<float> SubRoutes
+        {
+            get
+            {
+                List<float> subRouteDistances = new List<float>();
+                List<List<Vector3>> routes = GetSubroutes();
+                for (int i = 0; i < routes.Count; i++)
+                {
+                    float subDistance = 0;
+                    Vector3 start = new Vector3(0, 0, 0);   // need to add the proper start coordinates to this later
+
+                    for (int j = 0; j < routes[i].Count; j++)
+                    {
+                        Vector3 next = routes[i][j];
+                        subDistance += Vector3.Distance(start, next);
+                        start = next;
+                    }
+                    subDistance += Vector3.Distance(start, Vector3.zero);
+                    subRouteDistances.Add(subDistance);
+                }
+
+                subRouteDistances.Sort();
+                subRouteDistances.Reverse();
+
+                //  string log = "Sorting\n";
+                //  for (int i = 0; i < subRouteDistances.Count; i++)
+                //  {
+                //      log += subRouteDistances[i] + " ";
+                //  }
+                //  Debug.Log(log);
+
+                return subRouteDistances;
+            }
+        }
+
         public float TotalDistance
         {
             get
@@ -169,15 +204,53 @@ namespace RouteSolver
             }
         }
 
+        public List<float> WeightedSubRoutes
+        {
+            get
+            {
+                List<float> subRouteDistances = new List<float>();
+                List<List<Vector3>> routes = GetSubroutes();
+                for (int i = 0; i < routes.Count; i++)
+                {
+                    float subDistance = 0;
+                    Vector3 start = new Vector3(0, 0, 0);   // need to add the proper start coordinates to this later
+                    
+                    for (int j = 0; j < routes[i].Count; j++)
+                    {
+                        Vector3 next = routes[i][j];
+                        float rawDistance = Vector3.Distance(start, next);
+                        float passengerWeight = (float)Math.Sqrt(routes[i].Count - j);
+                        subDistance += rawDistance * passengerWeight;
+                        start = next;
+                    }
+                    subDistance += Vector3.Distance(start, Vector3.zero);
+                    subRouteDistances.Add(subDistance);
+                }
+
+                subRouteDistances.Sort();
+                subRouteDistances.Reverse();
+
+                //  string log = "Sorting\n";
+                //  for (int i = 0; i < subRouteDistances.Count; i++)
+                //  {
+                //      log += subRouteDistances[i] + " ";
+                //  }
+                //  Debug.Log(log);
+
+                return subRouteDistances;
+            }
+        }
+
         public float WeightedDistance      // longest subroute + half second subroute, third third etc
         {
             get
             {
-                return TotalDistance;   // for now
-                List<float> subRouteLengths = SubRouteDistance;
+                //  return WeightedSubRoutes.Sum();
+                return TotalDistance;
+                List<float> subRouteLengths = SubRoutes;
                 for (int i = 0; i < subRouteLengths.Count; i++)
                 {
-                    subRouteLengths[i] /= (i + 2);
+                    subRouteLengths[i] /= (i + 1);
                 }
                 return subRouteLengths.Sum();
             }
@@ -294,25 +367,38 @@ namespace RouteSolver
 
             int trailingCount = 0;
 
-            for (int i = 0; i < order.Count; i++)
-            {
-                if (order[i] == -1)
-                {
-                    while (trailing.Count > trailingCount && trailing[trailingCount] == -1)
-                    {
-                        trailingCount++;
-                    }
-
-                    if (trailing.Count > trailingCount)
-                    {
-                        order[i] = trailing[trailingCount];
-                        trailingCount++;
-                    }
-                    else break;
-                }
-            }
 
             order.RemoveRange(TotalAgentCapacity, trailing.Count);
+
+            int j = 0;
+
+            for (int i = 0; i < trailing.Count; i++)
+            {
+                while (order[j % order.Count] != -1)
+                {
+                    j++;
+                }
+                order[j % order.Count] = trailing[i];
+            }
+
+            //for (int i = 0; i < order.Count; i++)
+            //{
+            //    if (order[i] == -1)
+            //    {
+            //        while (trailing.Count > trailingCount && trailing[trailingCount] == -1)
+            //        {
+            //            trailingCount++;
+            //        }
+
+            //        if (trailing.Count > trailingCount)
+            //        {
+            //            order[i] = trailing[trailingCount];
+            //            trailingCount++;
+            //        }
+            //        else break;
+            //    }
+            //}
+
         }
 
         // create route from parents
@@ -493,7 +579,7 @@ namespace RouteSolver
 
         public string GetGeneString()
         {
-            string geneString = "Distance: " + (int)TotalDistance + "\n";
+            string geneString = "Weighted Distance: " + (int)WeightedDistance + "\n";
             foreach (int g in order)
             {
                 //  if (g >= RouteLength)

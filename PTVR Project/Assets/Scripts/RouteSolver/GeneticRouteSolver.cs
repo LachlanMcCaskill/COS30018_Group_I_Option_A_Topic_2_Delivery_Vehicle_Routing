@@ -16,7 +16,7 @@ namespace RouteSolver
             //  int[] vars = GetVariables();    //  user can input variables or use default variables
             //  int numberPoints = vars[0];
             //  int numberPopulation = vars[1];
-            int maxGeneration = 40; //  vars[2];
+            int maxGeneration = 20; //  vars[2];
             //  int numberBuses = vars[3];
             //  List<string> subroutes = new List<string>();
             //  List<float> averages = new List<float>();
@@ -46,8 +46,12 @@ namespace RouteSolver
 
             result = bestGeneration.GetRoutePlan();
 
-            Debug.Log("Generation " + bestGeneration.number + " Wins!\nWith a distance of " + bestGeneration.ShortestRoute().TotalDistance);
-            bestGeneration.Print();
+            string log = "Generation " + bestGeneration.number + " Wins! \n";   // With a distance of " + bestGeneration.ShortestRoute().TotalDistance + "\n"
+
+            log += "Total Distance: " + bestGeneration.ShortestRoute().TotalDistance + "\n";
+            log +=  bestGeneration.ShortestRoute().GetGeneString();
+
+            Debug.Log(log);
 
             return result;
         }

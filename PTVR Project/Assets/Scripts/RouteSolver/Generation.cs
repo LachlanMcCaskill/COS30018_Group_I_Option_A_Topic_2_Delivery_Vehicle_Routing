@@ -73,7 +73,7 @@ namespace RouteSolver
         {
             string log = "Generation " + number + " (Population: " + population.Count + ", Points " + points.Count + ", Generations: " + max +
                 ")\n"
-                + "Shortest Route: " + (int)ShortestRoute().TotalDistance + "\n"
+                + "Shortest Route: " + (int)ShortestRoute().WeightedDistance + "\n"
                 +  "Average Distance: " + (int)AverageDistance()
                  + "\n";
 
@@ -175,7 +175,7 @@ namespace RouteSolver
             GeneticRoute shortestRoute = population[0];
             for (int i = 1; i < population.Count; i++)
             {
-                if (population[i].TotalDistance < shortestRoute.TotalDistance)
+                if (population[i].WeightedDistance < shortestRoute.WeightedDistance)
                 {
                     shortestRoute = population[i];
                 }
