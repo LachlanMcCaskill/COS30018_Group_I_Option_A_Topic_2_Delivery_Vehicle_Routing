@@ -9,12 +9,11 @@ namespace RouteSolver
     {
         List<TransportAgentIntroductionMessage> agents;
 
+        int generation;
         public string name;
         public List<int> order;
         public List<Vector3> points;   // this is just the points in no specific order, change the order variable only
         public Vector3 depotPoint;
-
-
 
         //  public List<RoutePlan> GetRoutePlan2()
         //  {
@@ -267,6 +266,7 @@ namespace RouteSolver
 
         public GeneticRoute(Vector3 _start, List<Vector3> _points, List<int> _order, System.Random r, List<TransportAgentIntroductionMessage> agentsWithCapacities)
         {
+            generation = 0;
             depotPoint = _start;
             agents = agentsWithCapacities;
             points = _points;
@@ -367,9 +367,23 @@ namespace RouteSolver
                 trailing.Add(order[i]);
             }
 
+            string log = "Generation " + generation +
+                "\nOrder Before: ";
+            for (int k = 0; k < order.Count; k++)
+            {
+                log += (order[k] + " ");
+            }
+
             order.RemoveRange(TotalAgentCapacity, trailing.Count);
+            log += "\nOrder Cut: ";
+            for (int k = 0; k < order.Count; k++)
+            {
+                log += (order[k] + " ");
+            }
+
 
             int j = 0;
+
 
             for (int i = 0; i < trailing.Count; i++)
             {
@@ -379,6 +393,22 @@ namespace RouteSolver
                 }
                 if (j < 99) order[j % order.Count] = trailing[i];
             }
+
+            //if (j >= 99)
+            //{
+            //    log += "\nTrailing: ";
+            //    for (int k = 0; k < trailing.Count; k++)
+            //    {
+            //        log += (trailing[k] + " ");
+            //    }
+
+            //}
+            //log += "\nOrder Final: ";
+            //for (int k = 0; k < order.Count; k++)
+            //{
+            //    log += (order[k] + " ");
+            //}
+            //Debug.Log(log);
 
             //for (int i = 0; i < order.Count; i++)
             //{
@@ -406,7 +436,7 @@ namespace RouteSolver
             // this is the constructor for a child
             // ordered crossover https://towardsdatascience.com/evolution-of-a-salesman-a-complete-genetic-algorithm-tutorial-for-python-6fe5d2b3ca35
 
-
+            generation = mother.generation + 1;
             agents = agentsWithCapacities;
             points = _points;
             order = new List<int>(mother.order);
@@ -518,7 +548,7 @@ namespace RouteSolver
             {
                 if (!order.Contains(i))
                 {
-                    Debug.LogError("Chromosome is missing a gene: " + i);
+                    Debug.LogError("Trailing: Chromosome is missing a gene: " + i + " in generation: " + generation);
                     return "Chromosome is missing a gene: " + i;
                 }
             }

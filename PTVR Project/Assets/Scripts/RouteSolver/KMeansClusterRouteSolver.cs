@@ -45,9 +45,91 @@ namespace RouteSolver
 
 			Log.Info($"KMeansClusterRouteSolver completed in {Log.Cyan(iteration)} iterations.");
 
-			return CreateClusters();
+			//  return CreateClusters();    //  added a redistribution method, it could use a lot of fine tuning but it seems to work for now
 
-			void InitializeCentroids()
+            List<List<Vector3>> createdClusters = CreateClusters();
+
+            while (!ClustersEvenlyDistributed())
+            {
+                RedistributeClusters();
+            }
+
+            return createdClusters;
+
+            Boolean ClustersEvenlyDistributed()
+            {
+                //  cannot have any clusters larger than than an even distribution of points, can change this for capacity later if you want
+                for (int i = 0; i < createdClusters.Count; i++)
+                {
+                    int clusterSize = createdClusters[i].Count;
+                    int expectedSize = (int)Math.Ceiling((double)points.Count / (double)createdClusters.Count); // awful, trying to round up, seems to work
+                    Debug.Log("expected Size" + expectedSize);
+                    if (clusterSize > expectedSize) return false;
+                }
+
+                return true;
+            }
+
+            void RedistributeClusters() // ClustersEvenlyDistributedy is alread finding clusters that are too large so change this later
+            {
+                int expectedSize = (int)Math.Ceiling((double)points.Count / (double)createdClusters.Count); // awful, trying to round up, seems to work
+
+                List<Vector3> largestCluster = createdClusters[0];
+                for (int i = 1; i < createdClusters.Count; i++)
+                {
+                    if (createdClusters[i].Count > largestCluster.Count)
+                    {
+                        largestCluster = createdClusters[i];
+                    }
+                }
+
+                float distanceToCluster = 99999999;
+                int pointToMove = 0;
+
+                List<Vector3> newCluster = new List<Vector3>();
+
+                for (int i = 0; i < createdClusters.Count; i++)
+                {
+                    int clusterSize = createdClusters[i].Count;
+
+                    if (clusterSize < expectedSize)
+                    {
+                        Vector3 averageVectorNewCluster = AverageVectorOfCluster(createdClusters[i]);
+
+                        for (int j = 0; j < largestCluster.Count; j++)
+                        {
+                            float newDistance = Vector3.Distance(largestCluster[j], averageVectorNewCluster);
+                            if (newDistance < distanceToCluster)
+                            {
+                                newCluster = createdClusters[i];
+                                distanceToCluster = newDistance;
+                                pointToMove = j;
+                            }
+                        }
+                    }
+                }
+
+                if (newCluster.Count > 0)
+                {
+                    newCluster.Add(largestCluster[pointToMove]);
+                    largestCluster.RemoveAt(pointToMove);
+                }
+                else Debug.LogError("no new cluster found");//error
+            }
+
+            Vector3 AverageVectorOfCluster(List<Vector3> clusterToAverage)
+            {
+                Vector3 averageVector = Vector3.zero;
+                for (int i = 0; i < clusterToAverage.Count; i++)
+                {
+                    averageVector += clusterToAverage[i];
+                }
+
+                averageVector /= clusterToAverage.Count;
+                return averageVector;
+            }
+
+            void InitializeCentroids()
 			{
 				for (int i=0; i<centroids.Length; i++)
 				{

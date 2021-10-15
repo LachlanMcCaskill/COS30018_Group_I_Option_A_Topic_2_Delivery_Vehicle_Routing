@@ -12,7 +12,7 @@ namespace RouteSolver
         {
             string parameterLog = "Parameters passed to Solve()\n";
             parameterLog += "Start: " + start.ToString() + "\n";
-            parameterLog += "Points: ";
+            parameterLog += "Points (" + points.Count + "): ";
             for (int i = 0; i < points.Count; i++)
             {
                 parameterLog += points[i].ToString() + " ";
