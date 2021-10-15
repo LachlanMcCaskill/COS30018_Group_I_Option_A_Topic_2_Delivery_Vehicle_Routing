@@ -12,6 +12,7 @@ namespace RouteSolver
         public string name;
         public List<int> order;
         public List<Vector3> points;   // this is just the points in no specific order, change the order variable only
+        public Vector3 depotPoint;
 
 
 
@@ -155,7 +156,7 @@ namespace RouteSolver
                 for (int i = 0; i < routes.Count; i++)
                 {
                     float subDistance = 0;
-                    Vector3 start = new Vector3(0, 0, 0);   // need to add the proper start coordinates to this later
+                    Vector3 start = depotPoint;   // need to add the proper start coordinates to this later
 
                     for (int j = 0; j < routes[i].Count; j++)
                     {
@@ -163,7 +164,7 @@ namespace RouteSolver
                         subDistance += Vector3.Distance(start, next);
                         start = next;
                     }
-                    subDistance += Vector3.Distance(start, Vector3.zero);
+                    subDistance += Vector3.Distance(start, depotPoint);
                     subRouteDistances.Add(subDistance);
                 }
 
@@ -189,7 +190,7 @@ namespace RouteSolver
                 List<List<Vector3>> routes = GetSubroutes();
                 for (int i = 0; i < routes.Count; i++)
                 {
-                    Vector3 start = new Vector3(0, 0, 0);   // need to add the proper start coordinates to this later
+                    Vector3 start = depotPoint;   // need to add the proper start coordinates to this later
 
                     for (int j = 0; j < routes[i].Count; j++)
                     {
@@ -197,7 +198,7 @@ namespace RouteSolver
                         distance += Vector3.Distance(start, next);
                         start = next;
                     }
-                    distance += Vector3.Distance(start, Vector3.zero);
+                    distance += Vector3.Distance(start, depotPoint);
                 }
 
                 return distance;
@@ -264,8 +265,9 @@ namespace RouteSolver
             }
         }
 
-        public GeneticRoute(List<Vector3> _points, List<int> _order, System.Random r, List<TransportAgentIntroductionMessage> agentsWithCapacities)
+        public GeneticRoute(Vector3 _start, List<Vector3> _points, List<int> _order, System.Random r, List<TransportAgentIntroductionMessage> agentsWithCapacities)
         {
+            depotPoint = _start;
             agents = agentsWithCapacities;
             points = _points;
 
@@ -365,20 +367,17 @@ namespace RouteSolver
                 trailing.Add(order[i]);
             }
 
-            int trailingCount = 0;
-
-
             order.RemoveRange(TotalAgentCapacity, trailing.Count);
 
             int j = 0;
 
             for (int i = 0; i < trailing.Count; i++)
             {
-                while (order[j % order.Count] != -1)
+                while (order[j % order.Count] != -1 && j < 99)
                 {
                     j++;
                 }
-                order[j % order.Count] = trailing[i];
+                if (j < 99) order[j % order.Count] = trailing[i];
             }
 
             //for (int i = 0; i < order.Count; i++)

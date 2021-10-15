@@ -26,13 +26,13 @@ namespace RouteSolver
         }
 
         //  Initial
-        public List<GeneticRoute> PopulateGeneration(List<int> initialOrder, List<Vector3> _points)
+        public List<GeneticRoute> PopulateGeneration(List<int> initialOrder, List<Vector3> _points, Vector3 start)
         {
             population = new List<GeneticRoute>();
             for (int i = 0; i < populationSize; i++)
             {
                 //  Debug.Log("initial order " + initialOrder.Count);
-                GeneticRoute newRoute = new GeneticRoute(_points, initialOrder, r, agents);
+                GeneticRoute newRoute = new GeneticRoute(start, _points, initialOrder, r, agents);
                 population.Add(newRoute);
             }
             return population;
@@ -45,7 +45,7 @@ namespace RouteSolver
             agents = agentsWithCapacities;
 
             List<int> initialOrder = CreateOrder(points.Count, agents); // the initial order is just a list the length of the total capacity of all agents, containing the order of points from first to last point and then the excess space filled with 0s to represent empty spots on an agent
-            population = PopulateGeneration(initialOrder, _points);
+            population = PopulateGeneration(initialOrder, _points, start);
         }
 
         public Generation(Generation parent)
@@ -92,7 +92,7 @@ namespace RouteSolver
         GeneticRoute[] GetParents()
         {
             int size = Math.Min(selectionSize, population.Count / 2);
-            int[][] selection = ParentSelection(selectionSize, r);
+            int[][] selection = ParentSelection(size, r);
 
             GeneticRoute mother = GetFittestRouteFromRandomSelection(population, selection[0]);
             GeneticRoute father = GetFittestRouteFromRandomSelection(population, selection[1]); ;

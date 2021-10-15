@@ -10,6 +10,20 @@ namespace RouteSolver
 
         public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, List<TransportAgentIntroductionMessage> agentsWithCapacities)
         {
+            string parameterLog = "Parameters passed to Solve()\n";
+            parameterLog += "Start: " + start.ToString() + "\n";
+            parameterLog += "Points: ";
+            for (int i = 0; i < points.Count; i++)
+            {
+                parameterLog += points[i].ToString() + " ";
+            }
+            parameterLog += "\nAgents: ";
+            for (int i = 0; i < agentsWithCapacities.Count; i++)
+            {
+                parameterLog += agentsWithCapacities[i].Capacity;
+            }
+            Debug.Log(parameterLog);
+
             List<RoutePlan> result = new List<RoutePlan>();
 
             //  Setting Varaibles
