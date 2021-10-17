@@ -3,6 +3,7 @@ using UnityEngine;
 using MessageSystem;
 using RouteSolver;
 using System.Linq;
+using UnityEngine.SceneManagement;
 
 public class MasterRoutingAgent : MonoBehaviour
 {
@@ -63,8 +64,11 @@ public class MasterRoutingAgent : MonoBehaviour
 	{
 		Log.Info("Sending route to agents...");
 		Route[] routes = CreateRoutes();
-		SendRoutes(routes);
-		_generatedRoute = true;
+		if(routes != null)
+		{
+			SendRoutes(routes);
+			_generatedRoute = true;
+		}
 	}
 
     private void SendRoutes(Route[] routes)
@@ -87,27 +91,35 @@ public class MasterRoutingAgent : MonoBehaviour
 
     private Route[] CreateRoutes()
     {
-		int transportAgentCount = _transportAgents.Count;
-		if (transportAgentCount == 0) return new Route[]{};
-
-		Vector3 start = _transportNetwork.DepotDestination.transform.position;
-		List<Vector3> points = new List<Vector3>();
-		if(_passengerData.Count > 0)
+		if(SceneManager.GetActiveScene().name == "Routing" && _transportNetwork.DepotDestination != null)
 		{
-			foreach(DestinationMessage p in _passengerData)
+			int transportAgentCount = _transportAgents.Count;
+			if (transportAgentCount == 0) return new Route[]{};
+
+			Vector3 start = _transportNetwork.DepotDestination.transform.position;
+			List<Vector3> points = new List<Vector3>();
+			if(_passengerData.Count > 0)
 			{
-				if(!points.Contains(p.destination.transform.position))
+				foreach(DestinationMessage p in _passengerData)
 				{
-					points.Add(p.destination.transform.position);
-					Debug.Log("Added: "+p.destination.transform.position.ToString()+" to destinations.");
+					if(!points.Contains(p.destination.transform.position))
+					{
+						points.Add(p.destination.transform.position);
+						Debug.Log("Added: "+p.destination.transform.position.ToString()+" to destinations.");
+					}
 				}
+				List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents);
+				return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
 			}
-			List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents);
-			return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
+			else
+			{
+				Debug.Log("No passengers for which to create routes for.");
+				return null;
+			}
 		}
 		else
 		{
-			Debug.Log("No passengers for which to create routes for.");
+			Debug.Log("Routing only possible in routing scene with a transport network with a non-null depot variable.");
 			return null;
 		}
     }
