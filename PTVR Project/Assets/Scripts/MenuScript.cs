@@ -38,6 +38,12 @@ public class MenuScript : MonoBehaviour
         PlayerPrefs.SetString("RoutingStrategy", "KMeans2");
     }
 
+    public void loadGameSceneKMeansGA()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene(_targetsceneName);
+        PlayerPrefs.SetString("RoutingStrategy", "KMeansGA");
+    }
+
     public void QuitApp()
     {
         if (EditorApplication.isPlaying)
