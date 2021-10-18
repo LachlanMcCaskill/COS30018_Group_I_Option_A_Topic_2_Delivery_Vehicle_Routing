@@ -45,9 +45,12 @@ public class MasterRoutingAgent : MonoBehaviour
 				case "KMeans2":
 					_routeSolver = new KMeansClusterRouteSolver(new AlternativeGreedyRouteSolver());
 					break;
-				/*case "GA":
-					_routeSolver = new GeneticAlgorithm();
-					break;*/
+				case "GA":
+					_routeSolver = new GeneticRouteSolver();
+					break;
+				case "KMeansGA":
+					_routeSolver = new KMeansClusterRouteSolver(new GeneticRouteSolver());
+					break;
 				default:
 					break;
 			}
