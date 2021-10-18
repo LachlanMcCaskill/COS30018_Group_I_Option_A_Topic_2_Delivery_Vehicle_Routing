@@ -50,10 +50,39 @@ namespace RouteSolver
 				result[i].Destinations.Pop();
 			}
 
-			return result;
+            Debug.Log("Distance: " + TotalDistance(result));
+
+            return result;
 		}
 
-		private Stack<T> Reverse<T>(Stack<T> stack)
+
+        public float TotalDistance(List<RoutePlan> routes)
+        {
+            float distance = 0;
+
+
+            for (int i = 0; i < routes.Count; i++)
+            {
+                Vector3[] routeArray = new Vector3[routes[i].Destinations.Count];
+                routes[i].Destinations.CopyTo(routeArray, 0);
+
+                Vector3 start = new Vector3(0, 0, 0);   // need to add the proper start coordinates to this later
+
+                for (int j = 0; j < routeArray.Length; j++)
+                {
+                    Vector3 next = routeArray[j];
+                    distance += Vector3.Distance(start, next);
+                    start = next;
+                }
+                distance += Vector3.Distance(start, Vector3.zero);
+            }
+
+            return distance;
+
+        }
+
+
+        private Stack<T> Reverse<T>(Stack<T> stack)
 		{
 			Stack<T> reversed = new Stack<T>();
 			while (stack.Count > 0) reversed.Push(stack.Pop());
