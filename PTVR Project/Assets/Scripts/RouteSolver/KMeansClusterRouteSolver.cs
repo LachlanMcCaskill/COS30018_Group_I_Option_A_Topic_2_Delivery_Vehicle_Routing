@@ -45,9 +45,19 @@ namespace RouteSolver
 
 			Log.Info($"KMeansClusterRouteSolver completed in {Log.Cyan(iteration)} iterations.");
 
-			return CreateClusters();
+			//  return CreateClusters();
 
-			void InitializeCentroids()
+            List<List<Vector3>> createdClusters = CreateClusters();
+
+            //  should probably create a field limiting the size of clusters based on agent capacities, for now i'm just making it so none of the clusters are
+            //  larger than the number of points / the number of clusters rounded up (so cluster size 6 for 15 points and 3 clusters etc)
+            int expectedSize = (int)Math.Ceiling((double)points.Count / (double)createdClusters.Count); // definitely a better way to do this
+
+            while (!ClustersEvenlyDistributed());
+
+            return createdClusters;
+
+            void InitializeCentroids()
 			{
 				for (int i=0; i<centroids.Length; i++)
 				{
@@ -141,8 +151,70 @@ namespace RouteSolver
 					}
 				}
 				return clusters;
-			}
-		}
+            }
+
+            Boolean ClustersEvenlyDistributed()
+            {
+                //  cannot have any clusters larger than than an even distribution of points, can change this for capacity later if you want
+                for (int i = 0; i < createdClusters.Count; i++)
+                {
+                    if (createdClusters[i].Count > expectedSize)
+                    {
+                        RedistributeCluster(createdClusters[i]);
+                        return false;   // return false to repeat the distribution check
+                    }
+                }
+
+                return true;
+            }
+
+            void RedistributeCluster(List<Vector3> sendingCluster)
+            {
+                float distanceToCluster = float.MaxValue;
+                int pointToMove = 0;
+
+                List<Vector3> receivingCluster = new List<Vector3>();
+
+                for (int i = 0; i < createdClusters.Count; i++)
+                {
+                    if (createdClusters[i].Count < expectedSize)    // find a cluster with space
+                    {
+                        Vector3 averageVectorNewCluster = AverageVectorOfCluster(createdClusters[i]);   // get the 'center' of the cluster so we can determine a distance
+
+                        for (int j = 0; j < sendingCluster.Count; j++)
+                        {
+                            float newDistance = Vector3.Distance(sendingCluster[j], averageVectorNewCluster);   // find distance between points in the sendingCluster(which has too many points)
+
+                            if (newDistance < distanceToCluster)    //  compare the distance of all points in the sending cluster to find the closest point to the receiving cluster
+                            {
+                                receivingCluster = createdClusters[i];
+                                distanceToCluster = newDistance;
+                                pointToMove = j;
+                            }
+                        }
+                    }
+                }
+
+                if (receivingCluster.Count > 0) // check this isnt our empty list
+                {
+                    receivingCluster.Add(sendingCluster[pointToMove]);  // move the point from the sending to the receivng cluster
+                    sendingCluster.RemoveAt(pointToMove);
+                }
+                else Debug.LogError("no receiving cluster found");
+            }
+
+            Vector3 AverageVectorOfCluster(List<Vector3> clusterToAverage)
+            {
+                Vector3 averageVector = Vector3.zero;
+                for (int i = 0; i < clusterToAverage.Count; i++)
+                {
+                    averageVector += clusterToAverage[i];
+                }
+
+                averageVector /= clusterToAverage.Count;
+                return averageVector;
+            }
+        }
 
 		private Rect CalculateBounds(List<Vector3> points)
 		{
