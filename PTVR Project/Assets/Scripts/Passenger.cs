@@ -10,14 +10,23 @@ public class Passenger : MonoBehaviour
 {
     [SerializeField]private GameObject _intendedDestination;
 
-    public Passenger(GameObject destinationToSet)
+    //public Passenger(GameObject destinationToSet)
+    //{
+    //    _intendedDestination = destinationToSet;
+    //}
+
+    public void SetDestination(GameObject destination)
     {
-        _intendedDestination = destinationToSet;
+        _intendedDestination = destination;
+		sendDestination();
     }
 
     private void OnEnable()
 	{
-		sendDestination();
+        if (_intendedDestination != null && PlayerPrefs.GetInt("Randomize") == 0)
+        {
+            sendDestination();
+        }
 	}
 
     public void sendDestination()

@@ -31,7 +31,7 @@ public class MasterRoutingAgent : MonoBehaviour
     {
 		if(PlayerPrefs.HasKey("RoutingStrategy"))
 		{
-			switch(PlayerPrefs.GetString("RoutingStrategy"))
+            switch (PlayerPrefs.GetString("RoutingStrategy"))
 			{
 				case "Greedy1": 
 					_routeSolver = new GreedyRouteSolver();
@@ -55,7 +55,8 @@ public class MasterRoutingAgent : MonoBehaviour
 					break;
 			}
 			_transportNetwork = GameObject.Find("Network").GetComponent<TransportNetwork>();
-			RouteAgents();
+
+            RouteAgents();
 		}
 		else
 		{

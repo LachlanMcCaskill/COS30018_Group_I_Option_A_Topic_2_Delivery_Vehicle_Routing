@@ -17,9 +17,15 @@ public class TransportAgent : MonoBehaviour
 
 	private bool messageSent = false;
 
+    public void SetCapacity(int capacity)
+    {
+        _capacity = capacity;
+    }
+
 	private void OnEnable()
-	{
-		MessageBoard.ListenForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
+    {
+        SetCapacity(PlayerPrefs.GetInt("Capacity"));
+        MessageBoard.ListenForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
 		SendIntroductionMessage();
 		_color = _colors.Pop();
 	}

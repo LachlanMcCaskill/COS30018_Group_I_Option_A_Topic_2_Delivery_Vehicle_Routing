@@ -4,39 +4,104 @@ using System.Linq;
 
 public class TransportNetwork : MonoBehaviour
 {
+    public GameObject agentPrefab;
 	public GameObject StopPrefab;
-	public int StopCount = 16;
+    public GameObject passengerPrefab;
+    //  public int StopCount = 16;
     public GameObject[] Destinations { get; private set; }
     public GameObject DepotDestination { get; private set; }
+    public GameObject passengerList;
 
-	public void Start()
-	{
-		DepotDestination = GameObject.Find("Depot");
-		Destinations = GameObject.FindGameObjectsWithTag("Stop");
+    public int GetStopCount
+    {
+        get
+        {
+            Debug.Log("GetStopCount: " + PlayerPrefs.GetInt("Points"));
+            return PlayerPrefs.GetInt("Points");
+        }
+    }
 
-		//if there are no stops in the scene, create them randomly
-		if(Destinations.Length == 0 && StopPrefab != null)
-		{
-			Destinations = new GameObject[StopCount];
-			for(int i = 0; i<StopCount; i++)
-			{
-				Vector3 randomPosition = new Vector3(Random.Range(0f, 100f), 0f, Random.Range(0f, 100f));
-				GameObject destinationToAdd = Instantiate(StopPrefab, randomPosition, Quaternion.identity);
-				destinationToAdd.name = (i+1).ToString();
-				Destinations[i] = destinationToAdd;
-			}
-		}
-		else if(Destinations.Length == 0 && StopPrefab == null)
-		{
-			Log.Info("Could not find any stops in the scene and could not find a prefab to generate a network with.");
-		}
-		else
-		{
-			StopCount = Destinations.Length;
-		}
-	}
+    public void Start()
+    {
+        Randomize();
+        CreateTransportAgents();
+        DepotDestination = GameObject.Find("Depot");
+    }
 
-	public List<Vector3> DestinationPoints => Destinations.Select(destination => destination.transform.position).ToList();
+    private void Randomize()    // just deletes stops, random generation is taken care of in transport network
+    {
+        if (PlayerPrefs.GetInt("Randomize") == 1)
+        {
+            foreach (GameObject s in GameObject.FindGameObjectsWithTag("Stop"))
+            {
+                DestroyImmediate(s.gameObject);
+            }
+            foreach (GameObject s in GameObject.FindGameObjectsWithTag("Passenger"))
+            {
+                DestroyImmediate(s.gameObject);
+            }
+            CreateRandomPoints();
+        }
+        else
+        {
+            Destinations = GameObject.FindGameObjectsWithTag("Stop");
+            Log.Info("Destinations Length (" + Destinations.Length + ") > 0");
+            //  StopCount = Destinations.Length;
+        }
+    }
+
+    public GameObject CreateStop(int i)
+    {
+        Vector3 randomPosition = new Vector3(Random.Range(0f, 100f), 0f, Random.Range(0f, 100f));
+        GameObject destinationToAdd = Instantiate(StopPrefab, randomPosition, Quaternion.identity, transform);
+        destinationToAdd.name = "Stop " + (i + 1).ToString();
+
+        GameObject passenger = Instantiate(passengerPrefab, passengerList.transform);
+        passenger.GetComponent<Passenger>().SetDestination(destinationToAdd);
+        passenger.name = "Passenger " + (i + 1).ToString();
+        //Debug.Log("Randomize: Creating stop at  " + randomPosition);
+        return destinationToAdd;
+    }
+
+    public void CreateRandomPoints()
+    {
+        //if there are no stops in the scene, create them randomly
+        if (StopPrefab != null)
+        {
+            Destinations = new GameObject[GetStopCount];
+            for (int i = 0; i < GetStopCount; i++)
+            {
+                //Vector3 randomPosition = new Vector3(Random.Range(0f, 100f), 0f, Random.Range(0f, 100f));
+                //GameObject destinationToAdd = Instantiate(StopPrefab, randomPosition, Quaternion.identity);
+                //destinationToAdd.name = (i + 1).ToString();
+                Destinations[i] = CreateStop(i);
+            }
+        }
+        else
+        {
+            Log.Info("Could not find a prefab to generate a network with.");
+        }
+    }
+
+    private void CreateTransportAgents()
+    {
+        foreach (TransportAgent a in FindObjectsOfType<TransportAgent>())
+        {
+            Destroy(a.gameObject);
+        }
+
+        for (int i = 0; i < PlayerPrefs.GetInt("AgentCount"); i++)
+        {
+            CreateAgent();
+        }
+    }
+
+    public void CreateAgent()
+    {
+        GameObject newAgent = Instantiate(agentPrefab);
+    }
+
+    public List<Vector3> DestinationPoints => Destinations.Select(destination => destination.transform.position).ToList();
 
 	public Route CreateRouteFromPlan(RoutePlan routePlan) 
 	{

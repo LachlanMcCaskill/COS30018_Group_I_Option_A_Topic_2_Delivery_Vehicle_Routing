@@ -19,6 +19,7 @@ namespace RouteSolver
             //loop for each agent that has sent a message, using it's capacity to generate a route.
             foreach(TransportAgentIntroductionMessage t in agentsWithCapacities)
             {
+                Debug.Log("Found an agent");
                 //create the route and add the first point to the results
                 RoutePlan route = new RoutePlan();
                 route.Destinations.Push(start);
