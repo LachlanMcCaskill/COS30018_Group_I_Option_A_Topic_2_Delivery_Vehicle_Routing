@@ -40,16 +40,20 @@ public class TransportNetwork : MonoBehaviour
 
 	public Route CreateRouteFromPlan(RoutePlan routePlan) 
 	{
-		Route route = new Route();
+
+        Route route = new Route();
 
 		// add depot to stack as start
 		route.Destinations.Push(DepotDestination);
-		
-		// add destinations to stack
-		IEnumerable<GameObject> routeObjs = routePlan.Destinations.Select(point => Destinations.First(destination => destination.transform.position == point));
+       
+        //  to make multiple trips by one agent possible, ie returning to depot between trips, we need to add the depot to the array from which destinations are assigned
+        GameObject[] withDepot = Destinations.Concat(new GameObject[] { DepotDestination }).ToArray();
+
+        // add destinations to stack
+        IEnumerable<GameObject> routeObjs = routePlan.Destinations.Select(point => withDepot.First(destination => destination.transform.position == point));
 		foreach (GameObject obj in routeObjs)
 		{
-			route.Destinations.Push(obj);
+            route.Destinations.Push(obj);
 		}
 
 		// add depot to stack as end

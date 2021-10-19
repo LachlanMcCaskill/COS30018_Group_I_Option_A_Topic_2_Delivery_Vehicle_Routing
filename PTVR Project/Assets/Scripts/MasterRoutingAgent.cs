@@ -112,8 +112,8 @@ public class MasterRoutingAgent : MonoBehaviour
 					}
 				}
 				List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents);
-				return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
-			}
+				return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray(); 
+            }
 			else
 			{
 				Debug.Log("No passengers for which to create routes for.");

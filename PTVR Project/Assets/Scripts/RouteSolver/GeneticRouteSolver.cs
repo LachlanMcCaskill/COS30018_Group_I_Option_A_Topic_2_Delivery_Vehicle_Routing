@@ -8,6 +8,7 @@ namespace RouteSolver
     public class GeneticRouteSolver : IRouteSolver
     {
 
+
         public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, List<TransportAgentIntroductionMessage> agentsWithCapacities)
         {
             string parameterLog = "Parameters passed to Solve()\n";
@@ -17,16 +18,22 @@ namespace RouteSolver
             {
                 parameterLog += points[i].ToString() + " ";
             }
+
+            int totalCapacity = 0;
             parameterLog += "\nAgents: ";
             for (int i = 0; i < agentsWithCapacities.Count; i++)
             {
+                totalCapacity += agentsWithCapacities[i].Capacity;
                 parameterLog += agentsWithCapacities[i].Capacity;
             }
+
             Debug.Log(parameterLog);
 
             List<RoutePlan> result = new List<RoutePlan>();
 
-            //  Setting Varaibles
+            int minimumSuccessiveTrips = Mathf.CeilToInt((float)points.Count / (float)totalCapacity);
+
+            //  Setting Variables
             //  int[] vars = GetVariables();    //  user can input variables or use default variables
             //  int numberPoints = vars[0];
             //  int numberPopulation = vars[1];
@@ -39,7 +46,7 @@ namespace RouteSolver
             System.Random r = new System.Random();
             List<Generation> allGenerations = new List<Generation>();
 
-            Generation currentGeneration = new Generation(start, points, agentsWithCapacities, r);
+            Generation currentGeneration = new Generation(start, points, agentsWithCapacities, r, minimumSuccessiveTrips);
             Generation bestGeneration = currentGeneration;
 
             allGenerations.Add(currentGeneration);
