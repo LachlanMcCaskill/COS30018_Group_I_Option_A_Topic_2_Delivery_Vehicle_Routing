@@ -236,10 +236,10 @@ RectTransform:
   m_Father: {fileID: 322115420}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 879.1741, y: 622}
-  m_SizeDelta: {x: 94.3435, y: 95.8435}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -104, y: -74}
+  m_SizeDelta: {x: 94.343506, y: 95.843506}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &24119357
 MonoBehaviour:
@@ -2661,7 +2661,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 322115421}
         m_TargetAssemblyTypeName: MenuScript, Assembly-CSharp
-        m_MethodName: loadGameSceneKMeans2
+        m_MethodName: loadGameSceneKMeans1
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2794,7 +2794,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 322115421}
         m_TargetAssemblyTypeName: MenuScript, Assembly-CSharp
-        m_MethodName: loadGameSceneKMeans1
+        m_MethodName: loadGameSceneKMeans2
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

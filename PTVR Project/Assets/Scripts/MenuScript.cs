@@ -20,6 +20,7 @@ public class MenuScript : MonoBehaviour
         PlayerPrefs.SetInt("Capacity", 6);
         PlayerPrefs.SetInt("AgentCount", 2);
         PlayerPrefs.SetInt("Randomize", 0);
+
         _agentCountText.GetComponent<Text>().text = PlayerPrefs.GetInt("AgentCount").ToString();
         _agentCapacityText.GetComponent<Text>().text = PlayerPrefs.GetInt("Capacity").ToString();
         _pointCountText.GetComponent<Text>().text = PlayerPrefs.GetInt("Points").ToString();
