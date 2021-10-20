@@ -12,25 +12,41 @@ namespace RouteSolver
         int generation;
         public string name;
         public List<int> order;
-        public List<Vector3> points;   // this is just the points in no specific order, change the order variable only
+        //  public List<Vector3> points;   // this is just the points in no specific order, change the order variable only
+        public List<DestinationMessage> destinations;
         public Vector3 depotPoint;
         public int trips;
+
+        //  calculated
+        List<List<Vector3>> tripRoutes;
+        public float distance;
+        public List<RoutePlan> routePlan;
+        public float TotalDistance
+        {
+            get
+            {
+                return distance;
+            }
+        }
 
         public int RouteLength
         {
             get
             {
-                return points.Count;
+                return destinations.Count;
+                //return points.Count;
             }
         }
 
-        public GeneticRoute(Vector3 _start, List<Vector3> _points, List<int> _order, System.Random r, List<TransportAgentIntroductionMessage> agentsWithCapacities, int _trips)
+        public GeneticRoute(Vector3 _start, List<int> _order, System.Random r, List<TransportAgentIntroductionMessage> agentsWithCapacities,
+            int _trips, List<DestinationMessage> _destinations)
         {
             trips = _trips;
             generation = 0;
             depotPoint = _start;
             agents = agentsWithCapacities;
-            points = _points;
+            destinations = _destinations;
+            //  points = _points;
 
             order = new List<int>(_order);
 
@@ -42,6 +58,53 @@ namespace RouteSolver
             Debug.Log(orderString);
 
             RandomiseGenes(r);
+
+            Calculate();
+        }
+
+        void Calculate()
+        {
+            tripRoutes = CalculateRouteLoop();
+            distance = CalculateDistance();
+            routePlan = GetRoutePlan();
+        }
+
+        public List<List<Vector3>> GetSubroutes()
+        {
+            List<List<Vector3>> subRoutes = new List<List<Vector3>>();
+            for (int i = 0; i < agents.Count; i++)
+            {
+                subRoutes.Add(tripRoutes[i]);
+            }
+
+            for (int i = agents.Count; i < tripRoutes.Count; i++)
+            {
+                subRoutes[i % agents.Count].Add(depotPoint);
+                subRoutes[i % agents.Count].AddRange(tripRoutes[i]);
+            }
+
+            return subRoutes;
+        }
+
+        public float CalculateDistance()
+        {
+            distance = 0;
+            List<List<Vector3>> routes = GetSubroutes();
+            for (int i = 0; i < routes.Count; i++)
+            {
+                Vector3 start = depotPoint;   // need to add the proper start coordinates to this later
+
+                int destinationCount = routes[i].Count;
+                for (int j = 0; j < destinationCount; j++)
+                {
+                    Vector3 next = routes[i][j];// routes[i][j];
+                    distance += Vector3.Distance(start, next);
+                    start = next;
+                }
+                distance += Vector3.Distance(start, depotPoint);
+            }
+
+            return distance;
         }
 
         void RandomiseGenes(System.Random r)
@@ -54,10 +117,12 @@ namespace RouteSolver
 
         List<int> Mutate(System.Random r)
         {
-            for (int i = 0; i < Math.Max(order.Count / 10, 1); i++) // mutations scale to the size of the chromosome
+            int maxMutations = Math.Max(order.Count / 8, 1); // mutations scale to the size of the chromosome
+            int numberMutations = r.Next(0, maxMutations + 1);
+
+            for (int i = 0; i < numberMutations; i++)
             {
-                //  Swaps the position of two points in the route order
-                //  make sure to preserve index 0
+                //  takes a gene and inserts it into a new position
                 int gene = r.Next(0, order.Count - 1);
                 int location = r.Next(0, order.Count - 2);
 
@@ -125,11 +190,17 @@ namespace RouteSolver
 
             for (int i = 0; i < trailing.Count; i++)
             {
-                while (order[j % order.Count] != -1 && j < 99)  // j < 99 is a bit messy, not sure it's necessary anymore
+                if (trailing[i] != -1)
                 {
-                    j++;
+                    while (order[j % order.Count] != -1 && j < 99)
+                    {
+                        j++;
+                    }
+                    if (j < 99)
+                    {
+                        order[j % order.Count] = trailing[i];
+                    }
                 }
-                if (j < 99) order[j % order.Count] = trailing[i];
             }
         }
 
@@ -154,7 +225,8 @@ namespace RouteSolver
             trips = mother.trips;
             generation = mother.generation + 1;
             agents = mother.agents;
-            points = mother.points;
+            destinations = mother.destinations;
+            //  points = mother.points;
             order = new List<int>(mother.order);
             List<int> segment = CreateSegment(father, _r);
             int insertIndex = segment[0];
@@ -163,28 +235,19 @@ namespace RouteSolver
             Mutate(_r);
             PrintBreeding(mother, father, insertIndex, insertIndex + segment.Count, "Segment Logs Placeholder");
 
-            //string logSegments = "M: " + GetGeneString();
-            //logSegments += "F: " + father.GetGeneString();
-            //logSegments += "Segment: ";
-            //foreach (int s in segment)
-            //{
-            //    logSegments += s + " ";
-            //}
-            //logSegments += "\n";
 
-            //OverwriteGenes(segment);
-            //logSegments += "Ov: " + GetGeneString();
+            OverwriteGenesFromSegment(segment);
 
-            //InsertSegment(insertIndex, segment);
-            //logSegments += "In: " + GetGeneString();
+            InsertSegment(insertIndex, segment);
 
-            //RemoveGarbage();
-            //logSegments += "Rm: " + GetGeneString();
+            IncorporateTrailingGenes();
+
+            Calculate();
         }
 
         void PrintBreeding(GeneticRoute mother, GeneticRoute father, int startGene, int endGene, string segmentLog)
         {
-            string log = "Breeding: Mother, Father, Child \n";
+            string log = "Generation " + generation + " Breeding: Mother, Father, Child \n";
             log += mother.GetGeneString();
 
             log += father.GetGeneString().Split('\n')[0] + "\n";
@@ -219,10 +282,10 @@ namespace RouteSolver
 
             log += GetGeneString();
             CheckForDuplicateGenes();
-            string points = CheckForMissingGenes();
-            if (points.Length > 0)
+            string pointString = CheckForMissingGenes();
+            if (pointString.Length > 0)
             {
-                log += points + " Printing Segment Log\n ";
+                log += pointString + " Printing Segment Log\n ";
                 log += segmentLog;
             }
             Debug.LogWarning(log);  // put it here so it doesn't clog things up
@@ -230,7 +293,7 @@ namespace RouteSolver
 
         string CheckForMissingGenes()
         {
-            for (int i = 0; i < points.Count; i++)
+            for (int i = 0; i < destinations.Count; i++)
             {
                 if (!order.Contains(i))
                 {
@@ -264,6 +327,7 @@ namespace RouteSolver
                 {
                     totalCapacity += agents[i].Capacity;
                 }
+                totalCapacity *= trips;
                 return totalCapacity;
             }
         }
@@ -297,141 +361,216 @@ namespace RouteSolver
             return geneString;
         }
 
-        public List<RoutePlan> GetRoutePlan()
+        List<List<Vector3>> CalculateRouteLoop()
         {
-            List<RoutePlan> routePlan = new List<RoutePlan>();
+            List<List<Vector3>> tripPlan = new List<List<Vector3>>();
 
             int k = 0;
+            int p = 0;
 
-            for (int i = 0; i < agents.Count; i++)
+            List<DestinationMessage> pendingSpecial = new List<DestinationMessage>();
+
+            for (int t = 0; t < trips; t++)
             {
-                RoutePlan newPlan = new RoutePlan();
+                for (int i = 0; i < agents.Count; i++)
+                {
+                    NewTrip(ref tripPlan, ref pendingSpecial, ref i, ref p, ref k);
+                }
+            }
 
+            RoutePending(ref tripPlan, pendingSpecial, p);
+
+            return tripPlan;
+        }
+
+        void RoutePending(ref List<List<Vector3>> tripPlan, List<DestinationMessage> pendingSpecial, int p)
+        {
+            //int count = 0;
+
+            if (pendingSpecial.Count > p)
+            {
                 for (int t = 0; t < trips; t++)
                 {
-                    if (t != 0)
+                    for (int i = 0; i < agents.Count; i++)
                     {
-                        newPlan.Destinations.Push(depotPoint);  // Debug.LogError("This is the line that causes the error"); fixed by adding depot to TransportNetwork.CreateRouteFromPlan
-                    }                    
-                    for (int j = 0; j < agents[i].Capacity; j++)
-                    {
-                        if (k < order.Count)
+                        if (agents[i].Special)
                         {
-                            int pointIndex = order[k];
-                            k++;
-                            if (pointIndex > -1)    //  skip -1s, theyre empty capacity
+                            int tripNumber = t * agents.Count + i;
+                            for (int j = tripPlan[tripNumber].Count; j < agents[i].Capacity; j++)
                             {
-                                Vector3 point = points[pointIndex];
-                                newPlan.Destinations.Push(point);
+                                if (pendingSpecial.Count > p)
+                                {
+                                    tripPlan[tripNumber].Add(pendingSpecial[p].Position);
+                                    p++;
+                                }
+                                else return;
                             }
+                        }
+                        //  else count += agents[i].Capacity;
+                    }
+                }
+            }
+
+            if (pendingSpecial.Count > p)
+            {
+                Debug.LogError("pending not routed. Generation: " + generation);
+            }
+        }
+
+        void NewTrip(ref List<List<Vector3>> tripPlan, ref List<DestinationMessage> pendingSpecial, ref int i, ref int p, ref int k)
+        {
+            bool specialAgent = agents[i].Special;
+            List<Vector3> newTrip = new List<Vector3>();
+            tripPlan.Add(newTrip);
+
+            for (int j = 0; j < agents[i].Capacity; j++)
+            {
+                if (k < order.Count)
+                {
+                    if (pendingSpecial.Count > p && specialAgent)   // is there a pending location?
+                    {
+                        newTrip.Add(pendingSpecial[p].Position);    p++;
+                    }
+                    else
+                    {
+                        if (!specialAgent)  // cycle till we find a non-special destination
+                        {
+                            FindNormalDestination(ref newTrip, ref pendingSpecial, ref k);
+                        }
+                        else    // special agents can take any destination
+                        {
+                            if (order[k] > -1)    //  skip -1s, theyre empty capacity
+                            {
+                                Vector3 point = destinations[order[k]].Position;
+                                newTrip.Add(point);
+                            }
+                            k++;
                         }
                     }
                 }
-                newPlan.Destinations = Reverse(newPlan.Destinations);
-                routePlan.Add(newPlan);
+            }
+        }
+
+        void FindNormalDestination(ref List<Vector3> newTrip, ref List<DestinationMessage> pendingSpecial, ref int k)
+        {
+            while (k < order.Count && order[k] > -1 && destinations[order[k]].special)   // cycle through all specials and set them aside
+            {
+                pendingSpecial.Add(destinations[order[k]]);
+                k++;
+            }
+            if (k < order.Count)
+            {
+                if (order[k] > -1)    //  skip -1s, theyre empty capacity
+                {
+                    Debug.Log("order.Count = " + order.Count + ",    k = " + k + "\n destinations.Count = " + destinations.Count + ",    order[k] = " + order[k]);
+                    Vector3 point = destinations[order[k]].Position;
+                    newTrip.Add(point);
+                }
+                k++;
+            }
+        }
+
+        public List<RoutePlan> GetRoutePlan()
+        {
+            List<RoutePlan> routePlan = new List<RoutePlan>();
+            for (int i = 0; i < agents.Count; i++)
+            {
+                routePlan.Add(new RoutePlan());
+            }
+
+            for (int i = 0; i < agents.Count; i++)
+            {
+                mergeTrips(routePlan[i % agents.Count], tripRoutes[i]);
             }
 
             return routePlan;
         }
 
-        public List<List<Vector3>> GetSubroutes()
+        public RoutePlan mergeTrips(RoutePlan route, List<Vector3> appending)
         {
-            List<List<Vector3>> subRoutes = new List<List<Vector3>>();
-
-            int k = 0;
-
-            for (int i = 0; i < agents.Count; i++)
+            route.Destinations.Push(depotPoint);
+            for (int i = 0; i < appending.Count; i++)
             {
-                List<Vector3> newSubRoute = new List<Vector3>();
-                for (int t = 0; t < trips; t++)
-                {
-                    if (t != 0)
-                    {
-                        newSubRoute.Add(new Vector3(51,0,51));
-                    }
-                    for (int j = 0; j < agents[i].Capacity; j++)
-                    {
-                        if (k < order.Count)
-                        {
-                            int pointIndex = order[k];
-                            k++;
-                            if (pointIndex > -1)    //  skip -1s, theyre empty capacity
-                            {
-                                Vector3 point = points[pointIndex];
-                                newSubRoute.Add(point);
-                            }
-                        }
-                    }
-                }
-                subRoutes.Add(newSubRoute);
+                route.Destinations.Push(appending[i]);
             }
-
-            return subRoutes;
+            return route;
         }
 
-        public List<float> SubrouteDistancesOrdered
-        {
-            get
-            {
-                List<float> subRouteDistances = new List<float>();
-                List<List<Vector3>> routes = GetSubroutes();
-                for (int i = 0; i < routes.Count; i++)
-                {
-                    float subDistance = 0;
-                    Vector3 start = depotPoint;   // need to add the proper start coordinates to this later
 
-                    for (int j = 0; j < routes[i].Count; j++)
-                    {
-                        Vector3 next = routes[i][j];
-                        subDistance += Vector3.Distance(start, next);
-                        start = next;
-                    }
-                    subDistance += Vector3.Distance(start, depotPoint);
-                    subRouteDistances.Add(subDistance);
-                }
+        //    List<List<Vector3>> subRoutes = new List<List<Vector3>>();
 
-                subRouteDistances.Sort();       // sort from longest to shortest
-                subRouteDistances.Reverse();    // this is used for some weighted distance calculations
+        //    int k = 0;
 
-                return subRouteDistances;
-            }
-        }
+        //    for (int i = 0; i < agents.Count; i++)
+        //    {
+        //        List<Vector3> newSubRoute = new List<Vector3>();
+        //        for (int t = 0; t < trips; t++)
+        //        {
+        //            if (t != 0)
+        //            {
+        //                newSubRoute.Add(new Vector3(51, 0, 51));
+        //            }
+        //            for (int j = 0; j < agents[i].Capacity; j++)
+        //            {
+        //                if (k < order.Count)
+        //                {
+        //                    int pointIndex = order[k];
+        //                    k++;
+        //                    if (pointIndex > -1)    //  skip -1s, theyre empty capacity
+        //                    {
+        //                        Vector3 point = destinations[pointIndex].Position;
+        //                        newSubRoute.Add(point);
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        subRoutes.Add(newSubRoute);
+        //    }
 
-        public float TotalDistance
-        {
-            get
-            {
-                float distance = 0;
-                List<List<Vector3>> routes = GetSubroutes();
-                for (int i = 0; i < routes.Count; i++)
-                {
-                    Vector3 start = depotPoint;   // need to add the proper start coordinates to this later
+        //    return subRoutes;
+        //}
 
-                    for (int j = 0; j < routes[i].Count; j++)
-                    {
-                        Vector3 next = routes[i][j];
-                        distance += Vector3.Distance(start, next);
-                        start = next;
-                    }
-                    distance += Vector3.Distance(start, depotPoint);
-                }
+        //public List<float> SubrouteDistancesOrdered
+        //{
+        //    get
+        //    {
+        //        List<float> subRouteDistances = new List<float>();
+        //        List<List<Vector3>> routes = GetSubroutes();
+        //        for (int i = 0; i < routes.Count; i++)
+        //        {
+        //            float subDistance = 0;
+        //            Vector3 start = depotPoint;   // need to add the proper start coordinates to this later
 
-                return distance;
-            }
-        }
+        //            for (int j = 0; j < routes[i].Count; j++)
+        //            {
+        //                Vector3 next = routes[i][j];
+        //                subDistance += Vector3.Distance(start, next);
+        //                start = next;
+        //            }
+        //            subDistance += Vector3.Distance(start, depotPoint);
+        //            subRouteDistances.Add(subDistance);
+        //        }
+
+        //        subRouteDistances.Sort();       // sort from longest to shortest
+        //        subRouteDistances.Reverse();    // this is used for some weighted distance calculations
+
+        //        return subRouteDistances;
+        //    }
+        //}
+
 
         public float WeightedDistance      // the weighted distances I tried seemed less than optimal so just stick with total distance
         {
             get
             {
                 //  return WeightedSubRoutes.Sum();
-                return TotalDistance;
-                List<float> subRouteLengths = SubrouteDistancesOrdered;
-                for (int i = 0; i < subRouteLengths.Count; i++)
-                {
-                    subRouteLengths[i] /= (i + 1);
-                }
-                return subRouteLengths.Sum();
+                return distance;
+                //List<float> subRouteLengths = SubrouteDistancesOrdered;
+                //for (int i = 0; i < subRouteLengths.Count; i++)
+                //{
+                //    subRouteLengths[i] /= (i + 1);
+                //}
+                //return subRouteLengths.Sum();
             }
         }
     }

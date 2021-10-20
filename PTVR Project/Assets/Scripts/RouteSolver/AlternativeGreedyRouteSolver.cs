@@ -5,7 +5,7 @@ namespace RouteSolver
 {
 	public class AlternativeGreedyRouteSolver : IRouteSolver
     {
-        public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, List<TransportAgentIntroductionMessage> agentsWithCapacities)
+        public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, List<TransportAgentIntroductionMessage> agentsWithCapacities, List<DestinationMessage> destinations)
         {
             List<RoutePlan> result = new List<RoutePlan>();
             //copy points to another list so we can keep track of the points we've added to routes

@@ -24,8 +24,19 @@ public class TransportNetwork : MonoBehaviour
     public void Start()
     {
         Randomize();
+        CreatePassengers();
         CreateTransportAgents();
         DepotDestination = GameObject.Find("Depot");
+    }
+
+    private void CreatePassengers()
+    {
+        for (int i = 0; i < Destinations.Length; i++)
+        {
+            GameObject passenger = Instantiate(passengerPrefab, passengerList.transform);
+            passenger.GetComponent<Passenger>().SetDestination(Destinations[i]);
+            passenger.name = "Passenger " + (i + 1).ToString();
+        }
     }
 
     private void Randomize()    // just deletes stops, random generation is taken care of in transport network
@@ -56,9 +67,6 @@ public class TransportNetwork : MonoBehaviour
         GameObject destinationToAdd = Instantiate(StopPrefab, randomPosition, Quaternion.identity, transform);
         destinationToAdd.name = "Stop " + (i + 1).ToString();
 
-        GameObject passenger = Instantiate(passengerPrefab, passengerList.transform);
-        passenger.GetComponent<Passenger>().SetDestination(destinationToAdd);
-        passenger.name = "Passenger " + (i + 1).ToString();
         //Debug.Log("Randomize: Creating stop at  " + randomPosition);
         return destinationToAdd;
     }

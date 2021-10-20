@@ -10,25 +10,66 @@ public class TransportAgent : MonoBehaviour
 
     private List<Passenger> _passengers;
     [SerializeField]private int _capacity;
+    [SerializeField] private bool _special;
     private Route _route = null;
     private Route _movementRoute = null;
 	private Color _color;
 	private Lerped<Vector3> _target = new Lerped<Vector3>(Vector3.zero, 0.0f, Easing.EaseInOut);
 
-	private bool messageSent = false;
+
+    [SerializeField] private Mesh _sphere;
+    [SerializeField] private Mesh _cube;
+
+    //  [SerializeField] private Mesh _;
+
+    private bool messageSent = false;
+
+
+    private void OnEnable()
+    {
+        GetSpecial();
+        setShape();
+        SetCapacity(PlayerPrefs.GetInt("Capacity"));
+        MessageBoard.ListenForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
+        SendIntroductionMessage();
+        _color = _colors.Pop();
+    }
 
     public void SetCapacity(int capacity)
     {
         _capacity = capacity;
     }
 
-	private void OnEnable()
+    public void GetSpecial()
     {
-        SetCapacity(PlayerPrefs.GetInt("Capacity"));
-        MessageBoard.ListenForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
-		SendIntroductionMessage();
-		_color = _colors.Pop();
-	}
+        if (PlayerPrefs.GetString("SpecialRoute") == "True")
+        {
+            //  non-special agents need to be assigned first for reasons related to assigning special destinations, should resolve this a different way though
+            int notSpecialCount = PlayerPrefs.GetInt("NonSpecialAgentCount");
+            if (notSpecialCount > 0)
+            {
+                _special = false;
+            }
+            else _special = true;
+            PlayerPrefs.SetInt("NonSpecialAgentCount", notSpecialCount - 1);
+        }
+        else _special = false;
+    }
+
+    private void setShape()
+    {
+        Mesh mesh;
+        if (_special)
+        {
+            mesh = _sphere;
+        }
+        else
+        {
+            mesh = _cube;
+        }
+
+        gameObject.GetComponent<MeshFilter>().mesh = mesh;
+    }
 
 	private void OnDisable()
 	{
@@ -90,6 +131,7 @@ public class TransportAgent : MonoBehaviour
 			{
 				TransportAgentId = GetInstanceID(),
 				Capacity = _capacity,
+                Special = _special,
 			}		
 		);
 	}
@@ -149,6 +191,7 @@ public class TransportAgentIntroductionMessage : Message
 {
 	public int TransportAgentId;
 	public int Capacity;
+    public bool Special;
 }
 
 public class TransportAgentRetirementMessage : Message

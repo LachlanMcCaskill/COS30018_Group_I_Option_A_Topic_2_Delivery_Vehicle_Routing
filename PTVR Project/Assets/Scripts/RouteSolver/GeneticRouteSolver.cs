@@ -9,14 +9,14 @@ namespace RouteSolver
     {
 
 
-        public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, List<TransportAgentIntroductionMessage> agentsWithCapacities)
+        public List<RoutePlan> Solve(Vector3 start, List<Vector3> _pointsREMOVE, List<TransportAgentIntroductionMessage> agentsWithCapacities, List<DestinationMessage> destinations)
         {
             string parameterLog = "Parameters passed to Solve()\n";
             parameterLog += "Start: " + start.ToString() + "\n";
-            parameterLog += "Points (" + points.Count + "): ";
-            for (int i = 0; i < points.Count; i++)
+            parameterLog += "Points (" + destinations.Count + "): ";
+            for (int i = 0; i < destinations.Count; i++)
             {
-                parameterLog += points[i].ToString() + " ";
+                parameterLog += destinations[i].ToString() + " ";
             }
 
             int totalCapacity = 0;
@@ -31,7 +31,7 @@ namespace RouteSolver
 
             List<RoutePlan> result = new List<RoutePlan>();
 
-            int minimumSuccessiveTrips = Mathf.CeilToInt((float)points.Count / (float)totalCapacity);
+            int minimumSuccessiveTrips = Mathf.CeilToInt((float)destinations.Count / (float)totalCapacity);
 
             //  Setting Variables
             //  int[] vars = GetVariables();    //  user can input variables or use default variables
@@ -46,7 +46,7 @@ namespace RouteSolver
             System.Random r = new System.Random();
             List<Generation> allGenerations = new List<Generation>();
 
-            Generation currentGeneration = new Generation(start, points, agentsWithCapacities, r, minimumSuccessiveTrips);
+            Generation currentGeneration = new Generation(start, agentsWithCapacities, r, minimumSuccessiveTrips, destinations);
             Generation bestGeneration = currentGeneration;
 
             allGenerations.Add(currentGeneration);
@@ -77,17 +77,17 @@ namespace RouteSolver
             return result;
         }
 
-        static Vector2[] GeneratePoints(int count, System.Random r)
-        {
-            Vector2[] points = new Vector2[count];
-            for (int i = 0; i < count; i++)
-            {
-                float x = (float)r.NextDouble() * 10;
-                float y = (float)r.NextDouble() * 10;
-                points[i] = new Vector2(x, y);
-            }
-            return points;
-        }
+        //static Vector2[] GeneratePoints(int count, System.Random r)
+        //{
+        //    Vector2[] points = new Vector2[count];
+        //    for (int i = 0; i < count; i++)
+        //    {
+        //        float x = (float)r.NextDouble() * 10;
+        //        float y = (float)r.NextDouble() * 10;
+        //        points[i] = new Vector2(x, y);
+        //    }
+        //    return points;
+        //}
 
         static void PrintFinalResults(float firstRoute, float fastestRoute, int fastestGeneration, string fastestSubRoutes, float[] generationAverages, float finalRoute, List<float> averages, List<float> bests, List<string> subroutes)
         {

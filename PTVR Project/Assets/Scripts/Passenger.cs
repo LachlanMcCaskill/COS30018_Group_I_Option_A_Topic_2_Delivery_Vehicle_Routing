@@ -3,42 +3,96 @@ using MessageSystem;
 
 public class DestinationMessage : Message
 {
+    public Vector3 Position
+    {
+        get
+        {
+            return destination.transform.position;
+        }
+    }
+
     public GameObject destination;
+    public bool special;
 }
 
 public class Passenger : MonoBehaviour
 {
     [SerializeField]private GameObject _intendedDestination;
+    [SerializeField]private bool _special;
+
+    [SerializeField] private Mesh _cylinder;
+    [SerializeField] private Mesh _cube;
 
     //public Passenger(GameObject destinationToSet)
     //{
     //    _intendedDestination = destinationToSet;
     //}
 
-    public void SetDestination(GameObject destination)
+    private void getSpecial()
     {
-        _intendedDestination = destination;
-		sendDestination();
+        if (PlayerPrefs.GetString("SpecialRoute") == "True")
+        {
+            int specialCount = PlayerPrefs.GetInt("SpecialPoints");
+            if (specialCount > 0)
+            {
+                _special = true;
+                PlayerPrefs.SetInt("SpecialPoints", specialCount - 1);
+            }
+            else _special = false;
+        }
+        else _special = false;
     }
 
-    private void OnEnable()
-	{
-        if (_intendedDestination != null && PlayerPrefs.GetInt("Randomize") == 0)
+    public void SetDestination(GameObject destination)
+    {
+        getSpecial();
+        _intendedDestination = destination;
+        setSpecialDestination();
+        sendDestination();
+    }
+
+    public void setSpecialDestination()
+    {
+        Mesh mesh;
+        if (_special)
         {
-            sendDestination();
+            _intendedDestination.GetComponent<MeshRenderer>().material.color = Color.red;
+            mesh = _cylinder;
         }
-	}
+        else
+        {
+            _intendedDestination.GetComponent<MeshRenderer>().material.color = Color.green;
+            mesh = _cube;
+        }
+
+        _intendedDestination.GetComponent<MeshFilter>().mesh = mesh;
+    }
+
+    //   private void OnEnable()
+    //{
+    //       if (_intendedDestination != null && PlayerPrefs.GetInt("Randomize") == 0)
+    //       {
+    //           sendDestination();
+    //       }
+    //}
 
     public void sendDestination()
     {
-        Debug.Log("My name is "+gameObject.name+" and I want to go to point" + _intendedDestination.name + ".");	
+        string log = "My name is " + gameObject.name;
+        if (_special)
+        {
+            log += ". I am a special passenger";
+        }
+        log += ". I want to go to " + _intendedDestination.name + ".";
+        Debug.Log(log);
 
-		// send an introduction message
-		MessageBoard.SendMessage
+        // send an introduction message
+        MessageBoard.SendMessage
         (
             new DestinationMessage
             {
                 destination = _intendedDestination,
+                special = _special,
             }
         );
     }

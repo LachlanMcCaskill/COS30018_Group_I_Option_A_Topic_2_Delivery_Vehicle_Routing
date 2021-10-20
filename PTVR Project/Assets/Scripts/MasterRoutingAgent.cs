@@ -102,17 +102,25 @@ public class MasterRoutingAgent : MonoBehaviour
 
 			Vector3 start = _transportNetwork.DepotDestination.transform.position;
 			List<Vector3> points = new List<Vector3>();
+
+            List<DestinationMessage> destinations = new List<DestinationMessage>();
+
 			if(_passengerData.Count > 0)
 			{
 				foreach(DestinationMessage p in _passengerData)
 				{
-					if(!points.Contains(p.destination.transform.position))
+                    destinations.Add(p);
+
+                    if (!points.Contains(p.destination.transform.position))
 					{
 						points.Add(p.destination.transform.position);
 						Debug.Log("Added: "+p.destination.transform.position.ToString()+" to destinations.");
 					}
 				}
-				List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents);
+
+
+
+				List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents, destinations);
 				return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray(); 
             }
 			else
