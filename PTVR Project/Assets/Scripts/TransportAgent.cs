@@ -9,7 +9,7 @@ public class TransportAgent : MonoBehaviour
 	public float Speed;
 
     private List<Passenger> _passengers;
-    [SerializeField]private int _capacity;
+    public int Capacity;
     private Route _route = null;
     private Route _movementRoute = null;
 	private Color _color;
@@ -83,7 +83,7 @@ public class TransportAgent : MonoBehaviour
 			new TransportAgentIntroductionMessage
 			{
 				TransportAgentId = GetInstanceID(),
-				Capacity = _capacity,
+				Capacity = Capacity,
 			}		
 		);
 	}
