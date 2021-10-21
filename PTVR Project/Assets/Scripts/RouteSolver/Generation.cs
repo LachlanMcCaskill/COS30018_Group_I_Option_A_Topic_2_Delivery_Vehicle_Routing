@@ -13,45 +13,69 @@ namespace RouteSolver
         //  const int defaultGenerations = 25;   // takes a System.Random selection of population then finds fittest member of that selection
         //  const int defaultBuses = 4;   // takes a System.Random selection of population then finds fittest member of that selection
 
+        List<bool> specialArray;
         System.Random r;
-        int max = 20;
+        int max = 1;
         public int number;
         List<GeneticRoute> population;
-        List<Vector3> points;
+        List<DestinationMessage> destinations;
+        //  List<Vector3> points;
         List<TransportAgentIntroductionMessage> agents;
+        //  int trips;
 
         public List<RoutePlan> GetRoutePlan()
         {
-            return ShortestRoute().GetRoutePlan();
+            return ShortestRoute().routePlan;
         }
 
         //  Initial
-        public List<GeneticRoute> PopulateGeneration(List<int> initialOrder, List<Vector3> _points, Vector3 start)
+        public List<GeneticRoute> PopulateGeneration(List<int> initialOrder, Vector3 start, int trips)
         {
+            //  trips = _trips;
             population = new List<GeneticRoute>();
             for (int i = 0; i < populationSize; i++)
             {
                 //  Debug.Log("initial order " + initialOrder.Count);
-                GeneticRoute newRoute = new GeneticRoute(start, _points, initialOrder, r, agents);
+                GeneticRoute newRoute = new GeneticRoute(start, initialOrder, r, agents, trips, destinations);
                 population.Add(newRoute);
             }
             return population;
         }
 
-        public Generation(Vector3 start, List<Vector3> _points, List<TransportAgentIntroductionMessage> agentsWithCapacities, System.Random _r)
+        List<bool> CreateSpecialArray(int trips)
+        {
+            List<bool> array = new List<bool>();
+            for (int i = 0; i < agents.Count; i++)
+            {
+                for (int t = 0; t < trips; t++)
+                {
+                    for (int j = 0; j < agents[i].Capacity;j++)
+                    {
+                        array.Add(agents[i].Special);
+                    }
+                }
+            }
+            return array;
+        }
+
+        public Generation(Vector3 start, List<TransportAgentIntroductionMessage> agentsWithCapacities, System.Random _r, int trips, List<DestinationMessage> _destinations)
         {
             r = _r;
-            points = _points;
+            //points = _points;
+            destinations = _destinations;
             agents = agentsWithCapacities;
 
-            List<int> initialOrder = CreateOrder(points.Count, agents); // the initial order is just a list the length of the total capacity of all agents, containing the order of points from first to last point and then the excess space filled with 0s to represent empty spots on an agent
-            population = PopulateGeneration(initialOrder, _points, start);
+            List<int> initialOrder = CreateOrder(destinations.Count, agents, trips); // the initial order is just a list the length of the total capacity of all agents, containing the order of points from first to last point and then the excess space filled with 0s to represent empty spots on an agent
+            specialArray = CreateSpecialArray(trips);
+
+            population = PopulateGeneration(initialOrder, start, trips);
         }
 
         public Generation(Generation parent)
         {
             r = parent.r;
-            points = parent.points;
+            destinations = parent.destinations;
+            //  points = parent.points;
             max = parent.max;
             number = parent.number + 1;
             agents = parent.agents;
@@ -65,13 +89,13 @@ namespace RouteSolver
             for (int i = 0; i < populationSize; i++)
             {
                 GeneticRoute[] parents = parent.GetParents();
-                population.Add(new GeneticRoute(points, parents[0], parents[1], r, agents));
+                population.Add(new GeneticRoute(parents[0], parents[1], r));
             }
         }
 
         public void Print()
         {
-            string log = "Generation " + number + " (Population: " + population.Count + ", Points " + points.Count + ", Generations: " + max +
+            string log = "Generation " + number + " (Population: " + population.Count + ", Points " + destinations.Count + ", Generations: " + max +
                 ")\n"
                 + "Shortest Route: " + (int)ShortestRoute().WeightedDistance + "\n"
                 +  "Average Distance: " + (int)AverageDistance()
@@ -183,7 +207,7 @@ namespace RouteSolver
             return shortestRoute;
         }
 
-        List<int> CreateOrder(int pointCount, List<TransportAgentIntroductionMessage> agents)
+        List<int> CreateOrder(int pointCount, List<TransportAgentIntroductionMessage> agents, int trips)
         {
             // just generates an array of sequential ints (this is basically the chromosome)
             List<int> order = new List<int>();
@@ -196,6 +220,8 @@ namespace RouteSolver
                 chromosomeLength += agents[i].Capacity;
                 //Debug.Log("agents[i].Capacity " + agents[i].Capacity);
             }
+
+            chromosomeLength *= trips;
 
             for (int i = 0; i < chromosomeLength; i++)
             {
