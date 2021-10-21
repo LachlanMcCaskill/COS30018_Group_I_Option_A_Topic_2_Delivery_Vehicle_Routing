@@ -127,8 +127,6 @@ public class MasterRoutingAgent : MonoBehaviour
                     }
                 }
 
-
-
                 List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents, destinations);
                 return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
             }
@@ -158,8 +156,9 @@ public class MasterRoutingAgent : MonoBehaviour
     {
         _transportAgents.RemoveAll(agent => agent.TransportAgentId == message.TransportAgentId);
 
-        // regenerate route when an agent retires
-        if (_generatedRoute) RouteAgents();
+        //  regenerate route when an agent retires
+        //  this causes routes to be regenerated when you press back or quit
+        //  if (_generatedRoute) RouteAgents(); 
     }
 
     private void OnPassengerIntroduction(DestinationMessage message)

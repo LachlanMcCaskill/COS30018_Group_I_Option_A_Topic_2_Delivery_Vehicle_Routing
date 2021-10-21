@@ -16,7 +16,7 @@ namespace RouteSolver
             parameterLog += "Points (" + destinations.Count + "): ";
             for (int i = 0; i < destinations.Count; i++)
             {
-                parameterLog += destinations[i].ToString() + " ";
+                parameterLog += destinations[i].Position.ToString() + " ";
             }
 
             int totalCapacity = 0;
@@ -24,7 +24,7 @@ namespace RouteSolver
             for (int i = 0; i < agentsWithCapacities.Count; i++)
             {
                 totalCapacity += agentsWithCapacities[i].Capacity;
-                parameterLog += agentsWithCapacities[i].Capacity;
+                parameterLog += agentsWithCapacities[i].Capacity + " ";
             }
 
             Debug.Log(parameterLog);

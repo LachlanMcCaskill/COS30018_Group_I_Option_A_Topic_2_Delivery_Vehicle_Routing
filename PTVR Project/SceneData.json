@@ -1,208 +1,194 @@
 {
   "Stops": [
     {
-      "Name": "1",
-      "Position": {
-        "x": 20.0,
-        "y": 0.0,
-        "z": 20.0
-      }
+      "Name": "Stop 1",
+      "PositionX": 85.39461,
+      "PositionY": 0.0,
+      "PositionZ": 26.6480618
     },
     {
-      "Name": "2",
-      "Position": {
-        "x": 9.0,
-        "y": 0.0,
-        "z": 90.75
-      }
+      "Name": "Stop 2",
+      "PositionX": 19.4329987,
+      "PositionY": 0.0,
+      "PositionZ": 82.0352554
     },
     {
-      "Name": "3",
-      "Position": {
-        "x": 12.5,
-        "y": 0.0,
-        "z": 10.0
-      }
+      "Name": "Stop 3",
+      "PositionX": 95.34361,
+      "PositionY": 0.0,
+      "PositionZ": 24.2836475
     },
     {
-      "Name": "4",
-      "Position": {
-        "x": 29.5,
-        "y": 0.0,
-        "z": 29.5
-      }
+      "Name": "Stop 4",
+      "PositionX": 16.2655,
+      "PositionY": 0.0,
+      "PositionZ": 44.0296478
     },
     {
-      "Name": "5",
-      "Position": {
-        "x": 29.5,
-        "y": 0.0,
-        "z": 80.5
-      }
+      "Name": "Stop 5",
+      "PositionX": 58.5800362,
+      "PositionY": 0.0,
+      "PositionZ": 32.4014473
     },
     {
-      "Name": "6",
-      "Position": {
-        "x": 74.2,
-        "y": 0.0,
-        "z": 80.5
-      }
+      "Name": "Stop 6",
+      "PositionX": 68.51527,
+      "PositionY": 0.0,
+      "PositionZ": 97.29349
     },
     {
-      "Name": "7",
-      "Position": {
-        "x": 74.2,
-        "y": 0.0,
-        "z": 12.5999985
-      }
+      "Name": "Stop 7",
+      "PositionX": 81.59574,
+      "PositionY": 0.0,
+      "PositionZ": 52.8023643
     },
     {
-      "Name": "8",
-      "Position": {
-        "x": 74.2,
-        "y": 0.0,
-        "z": 37.8
-      }
+      "Name": "Stop 8",
+      "PositionX": 68.64643,
+      "PositionY": 0.0,
+      "PositionZ": 36.66262
     },
     {
-      "Name": "9",
-      "Position": {
-        "x": 89.1,
-        "y": 0.0,
-        "z": 24.6
-      }
+      "Name": "Stop 9",
+      "PositionX": 29.0779419,
+      "PositionY": 0.0,
+      "PositionZ": 33.142765
     },
     {
-      "Name": "10",
-      "Position": {
-        "x": 89.1,
-        "y": 0.0,
-        "z": 62.6
-      }
+      "Name": "Stop 10",
+      "PositionX": 8.526077,
+      "PositionY": 0.0,
+      "PositionZ": 57.8944626
     },
     {
-      "Name": "11",
-      "Position": {
-        "x": 56.4,
-        "y": 0.0,
-        "z": 85.6
-      }
+      "Name": "Stop 11",
+      "PositionX": 18.9981346,
+      "PositionY": 0.0,
+      "PositionZ": 77.0648956
     },
     {
-      "Name": "12",
-      "Position": {
-        "x": 45.15,
-        "y": 0.0,
-        "z": 12.0999985
-      }
+      "Name": "Stop 12",
+      "PositionX": 16.0805473,
+      "PositionY": 0.0,
+      "PositionZ": 49.4918175
     },
     {
-      "Name": "13",
-      "Position": {
-        "x": 17.9000015,
-        "y": 0.0,
-        "z": 48.1
-      }
+      "Name": "Stop 13",
+      "PositionX": 48.36059,
+      "PositionY": 0.0,
+      "PositionZ": 10.4823952
     },
     {
-      "Name": "14",
-      "Position": {
-        "x": 89.4,
-        "y": 0.0,
-        "z": 85.85
-      }
+      "Name": "Stop 14",
+      "PositionX": 55.05727,
+      "PositionY": 0.0,
+      "PositionZ": 36.3842773
     },
     {
-      "Name": "15",
-      "Position": {
-        "x": 92.7,
-        "y": 0.0,
-        "z": 73.0
-      }
+      "Name": "Stop 15",
+      "PositionX": 47.296505,
+      "PositionY": 0.0,
+      "PositionZ": 9.976997
     },
     {
-      "Name": "16",
-      "Position": {
-        "x": 62.3,
-        "y": 0.0,
-        "z": 67.2
-      }
+      "Name": "Stop 16",
+      "PositionX": 54.6637344,
+      "PositionY": 0.0,
+      "PositionZ": 79.2611847
     }
   ],
   "TransportAgents": [
     {
-      "Name": "TransportAgent 1",
-      "Capacity": 10
+      "Name": "TransportAgent(Clone)",
+      "Capacity": 6,
+      "Special": false
     },
     {
-      "Name": "TransportAgent 2",
-      "Capacity": 10
+      "Name": "TransportAgent(Clone)",
+      "Capacity": 6,
+      "Special": false
     }
   ],
   "Passengers": [
     {
-      "Name": "Passenger",
-      "Destination": "1"
+      "Name": "Passenger 16",
+      "Destination": "Stop 16",
+      "Special": false
     },
     {
-      "Name": "Passenger (7)",
-      "Destination": "8"
+      "Name": "Passenger 15",
+      "Destination": "Stop 15",
+      "Special": false
     },
     {
-      "Name": "Passenger (4)",
-      "Destination": "5"
+      "Name": "Passenger 14",
+      "Destination": "Stop 14",
+      "Special": false
     },
     {
-      "Name": "Passenger (14)",
-      "Destination": "15"
+      "Name": "Passenger 13",
+      "Destination": "Stop 13",
+      "Special": false
     },
     {
-      "Name": "Passenger (15)",
-      "Destination": "16"
+      "Name": "Passenger 12",
+      "Destination": "Stop 12",
+      "Special": false
     },
     {
-      "Name": "Passenger (1)",
-      "Destination": "2"
+      "Name": "Passenger 11",
+      "Destination": "Stop 11",
+      "Special": false
     },
     {
-      "Name": "Passenger (5)",
-      "Destination": "6"
+      "Name": "Passenger 10",
+      "Destination": "Stop 10",
+      "Special": false
     },
     {
-      "Name": "Passenger (2)",
-      "Destination": "3"
+      "Name": "Passenger 9",
+      "Destination": "Stop 9",
+      "Special": false
     },
     {
-      "Name": "Passenger (11)",
-      "Destination": "12"
+      "Name": "Passenger 8",
+      "Destination": "Stop 8",
+      "Special": false
     },
     {
-      "Name": "Passenger (10)",
-      "Destination": "11"
+      "Name": "Passenger 7",
+      "Destination": "Stop 7",
+      "Special": false
     },
     {
-      "Name": "Passenger (9)",
-      "Destination": "10"
+      "Name": "Passenger 6",
+      "Destination": "Stop 6",
+      "Special": false
     },
     {
-      "Name": "Passenger (12)",
-      "Destination": "13"
+      "Name": "Passenger 5",
+      "Destination": "Stop 5",
+      "Special": false
     },
     {
-      "Name": "Passenger (8)",
-      "Destination": "9"
+      "Name": "Passenger 4",
+      "Destination": "Stop 4",
+      "Special": false
     },
     {
-      "Name": "Passenger (13)",
-      "Destination": "14"
+      "Name": "Passenger 3",
+      "Destination": "Stop 3",
+      "Special": false
     },
     {
-      "Name": "Passenger (3)",
-      "Destination": "4"
+      "Name": "Passenger 2",
+      "Destination": "Stop 2",
+      "Special": false
     },
     {
-      "Name": "Passenger (6)",
-      "Destination": "7"
+      "Name": "Passenger 1",
+      "Destination": "Stop 1",
+      "Special": false
     }
   ]
 }

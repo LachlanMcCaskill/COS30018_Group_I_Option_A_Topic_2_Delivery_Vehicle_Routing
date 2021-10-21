@@ -71,9 +71,9 @@ public class TransportAgent : MonoBehaviour
         _color = _colors.Pop();
     }
 
-    private void OnEnable()
-    {
-    }
+    //private void OnEnable()
+    //{
+    //}
 
     public void SetCapacity(int capacity)
     {

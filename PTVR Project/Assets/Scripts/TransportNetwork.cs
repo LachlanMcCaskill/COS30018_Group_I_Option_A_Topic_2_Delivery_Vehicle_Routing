@@ -16,7 +16,6 @@ public class TransportNetwork : MonoBehaviour
     {
         get
         {
-            Debug.Log("GetStopCount: " + PlayerPrefs.GetInt("Points"));
             return PlayerPrefs.GetInt("Points");
         }
     }
@@ -26,16 +25,16 @@ public class TransportNetwork : MonoBehaviour
         DepotDestination = GameObject.Find("Depot");
         if (PlayerPrefs.GetString("Mode") == "Generate")
         {
+            Debug.Log("Mode: Generating new environment.    PlayerPrefs.GetString(Mode) = " + PlayerPrefs.GetString("Mode"));
             CreateRandomPoints();
             CreatePassengers();
             CreateTransportAgents();
         }
         else
         {
+            Debug.Log("Mode: Loading from file.    PlayerPrefs.GetString(Mode) = " + PlayerPrefs.GetString("Mode"));
             FindObjectOfType<SceneDataBehaviour>().Load();
             Destinations = GameObject.FindGameObjectsWithTag("Stop");
-            Log.Info("Destinations Length (" + Destinations.Length + ") > 0");
-            //
             //  StopCount = Destinations.Length;
         }
     }
@@ -111,7 +110,6 @@ public class TransportNetwork : MonoBehaviour
 
 	public Route CreateRouteFromPlan(RoutePlan routePlan) 
 	{
-
         Route route = new Route();
 
 		// add depot to stack as start
