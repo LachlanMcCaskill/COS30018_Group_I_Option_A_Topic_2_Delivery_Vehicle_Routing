@@ -94,7 +94,7 @@ public class MasterRoutingAgent : MonoBehaviour
 
     private Route[] CreateRoutes()
     {
-		if(SceneManager.GetActiveScene().name == "Routing" && _transportNetwork.DepotDestination != null)
+		if(SceneManager.GetActiveScene().buildIndex == 1 && _transportNetwork.DepotDestination != null)
 		{
 			int transportAgentCount = _transportAgents.Count;
 			if (transportAgentCount == 0) return new Route[]{};
