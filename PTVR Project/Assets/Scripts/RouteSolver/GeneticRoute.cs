@@ -417,7 +417,7 @@ namespace RouteSolver
             if (pendingSpecial.Count > p && check != p)
             {
                 check = p;
-                Debug.LogError("Making a  new route from unvisited special destinations.");
+                //Debug.LogError("Making a  new route from unvisited special destinations.");
                 for (int t = 0; t < trips; t++)
                 {
                     for (int i = 0; i < agents.Count; i++)
