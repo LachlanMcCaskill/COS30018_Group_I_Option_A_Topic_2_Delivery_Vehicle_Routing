@@ -23,10 +23,21 @@ public class TransportNetwork : MonoBehaviour
 
     public void Start()
     {
-        Randomize();
-        CreatePassengers();
-        CreateTransportAgents();
         DepotDestination = GameObject.Find("Depot");
+        if (PlayerPrefs.GetString("Mode") == "Generate")
+        {
+            CreateRandomPoints();
+            CreatePassengers();
+            CreateTransportAgents();
+        }
+        else
+        {
+            FindObjectOfType<SceneDataBehaviour>().Load();
+            Destinations = GameObject.FindGameObjectsWithTag("Stop");
+            Log.Info("Destinations Length (" + Destinations.Length + ") > 0");
+            //
+            //  StopCount = Destinations.Length;
+        }
     }
 
     private void CreatePassengers()
@@ -34,30 +45,8 @@ public class TransportNetwork : MonoBehaviour
         for (int i = 0; i < Destinations.Length; i++)
         {
             GameObject passenger = Instantiate(passengerPrefab, passengerList.transform);
-            passenger.GetComponent<Passenger>().SetDestination(Destinations[i]);
+            passenger.GetComponent<Passenger>().GenerateFromPreferences(Destinations[i]);
             passenger.name = "Passenger " + (i + 1).ToString();
-        }
-    }
-
-    private void Randomize()    // just deletes stops, random generation is taken care of in transport network
-    {
-        if (PlayerPrefs.GetInt("Randomize") == 1)
-        {
-            foreach (GameObject s in GameObject.FindGameObjectsWithTag("Stop"))
-            {
-                DestroyImmediate(s.gameObject);
-            }
-            foreach (GameObject s in GameObject.FindGameObjectsWithTag("Passenger"))
-            {
-                DestroyImmediate(s.gameObject);
-            }
-            CreateRandomPoints();
-        }
-        else
-        {
-            Destinations = GameObject.FindGameObjectsWithTag("Stop");
-            Log.Info("Destinations Length (" + Destinations.Length + ") > 0");
-            //  StopCount = Destinations.Length;
         }
     }
 
@@ -73,6 +62,14 @@ public class TransportNetwork : MonoBehaviour
 
     public void CreateRandomPoints()
     {
+        foreach (GameObject s in GameObject.FindGameObjectsWithTag("Stop"))
+        {
+            DestroyImmediate(s.gameObject);
+        }
+        foreach (GameObject s in GameObject.FindGameObjectsWithTag("Passenger"))
+        {
+            DestroyImmediate(s.gameObject);
+        }
         //if there are no stops in the scene, create them randomly
         if (StopPrefab != null)
         {
@@ -107,6 +104,7 @@ public class TransportNetwork : MonoBehaviour
     public void CreateAgent()
     {
         GameObject newAgent = Instantiate(agentPrefab);
+        newAgent.GetComponent<TransportAgent>().GenerateFromPreferences();
     }
 
     public List<Vector3> DestinationPoints => Destinations.Select(destination => destination.transform.position).ToList();

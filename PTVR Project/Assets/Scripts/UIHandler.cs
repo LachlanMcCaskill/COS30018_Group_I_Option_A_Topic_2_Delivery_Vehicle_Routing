@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 using MessageSystem;
 
@@ -11,9 +12,26 @@ public class UIHandler : MonoBehaviour
     private List<GameObject> _costPanels = new List<GameObject>();
     [SerializeField]private GameObject layoutGroup;
 
+    [SerializeField] private GameObject variablePanel;
+    [SerializeField] private Text agentCountText;
+    [SerializeField] private Text specialAgentCountText;
+    [SerializeField] private Text capacityText;
+    [SerializeField] private Text passengerCountText;
+    [SerializeField] private Text specialPassengerCountText;
+
     private void OnEnable()
     {
         MessageBoard.ListenForMessage<TransportAgentCostMessage>(OnCostMessageRecieved);
+        PrintVariables();
+    }
+
+    public void PrintVariables()
+    {
+        agentCountText.text = PlayerPrefs.GetInt("AgentCount").ToString();
+        specialAgentCountText.text = PlayerPrefs.GetInt("SpecialAgentCount").ToString();
+        capacityText.text = PlayerPrefs.GetInt("Capacity").ToString();
+        passengerCountText.text = PlayerPrefs.GetInt("Points").ToString();
+        specialPassengerCountText.text = PlayerPrefs.GetInt("SpecialPoints").ToString();
     }
 
     private void OnDisable()

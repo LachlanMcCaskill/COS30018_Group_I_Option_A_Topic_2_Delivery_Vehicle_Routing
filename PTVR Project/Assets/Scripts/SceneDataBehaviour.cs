@@ -16,7 +16,7 @@ class SceneDataBehaviour : MonoBehaviour
 	{
 		Network = GameObject.Find("Network");
 		PassengerList = GameObject.Find("PassengerList");
-		Load();
+        // Load();  moved this to the masterroutingagent
 	}
 
 	private void Save()
@@ -47,45 +47,76 @@ class SceneDataBehaviour : MonoBehaviour
 			{
 				Name = agent.name,
 				Capacity = agent.Capacity,
+                Special = agent.Special,    // added special quality
 			})
 			.ToArray();
 
-		SceneDataSerialized.Passenger[] FindPassengers() => GameObject
-			.FindObjectsOfType<Passenger>()
-			.Select(passenger => new SceneDataSerialized.Passenger
-			{
-				Name = passenger.name,
-				Destination = passenger.IntendedDestination.name,
-			})
+        SceneDataSerialized.Passenger[] FindPassengers() => GameObject
+            .FindObjectsOfType<Passenger>()
+            .Select(passenger => new SceneDataSerialized.Passenger
+            {
+                Name = passenger.name,
+                Destination = passenger.IntendedDestination.name,
+                Special = passenger.Special,   // added special quality
+            })
 			.ToArray();
 	}
 
-	private void Load()
+	public void Load()
 	{
 		string sceneDataString = File.ReadAllText("SceneData.json");
 		SceneDataSerialized sceneData = JsonConvert.DeserializeObject<SceneDataSerialized>(sceneDataString);
 
-		foreach (SceneDataSerialized.Stop stop in sceneData.Stops)
+        int agentCount = 0;
+        int specialAgentCount = 0;
+        int capacity = 0;
+        int passengerCount = 0;
+        int specialPassengerCount = 0;
+
+        foreach (SceneDataSerialized.Stop fileStop in sceneData.Stops)
 		{
-			GameObject obj = GameObject.Instantiate(StopPrefab, stop.Position, Quaternion.identity, Network.transform);
-			obj.transform.position = stop.Position;
-			obj.name = stop.Name;
+			GameObject obj = GameObject.Instantiate(StopPrefab, fileStop.Position, Quaternion.identity, Network.transform);
+			obj.transform.position = fileStop.Position;
+			obj.name = fileStop.Name;
 		}
 
-		foreach (SceneDataSerialized.Passenger passenger in sceneData.Passengers)
+		foreach (SceneDataSerialized.Passenger filePassenger in sceneData.Passengers)
 		{
-			Passenger p = GameObject.Instantiate(PassengerPrefab, Vector3.zero, Quaternion.identity, PassengerList.transform).GetComponent<Passenger>();
-			p.IntendedDestination = GameObject.Find(passenger.Destination);
-			p.SendDestination();
-		}
+            passengerCount++;
+            if (filePassenger.Special)
+            {
+                specialPassengerCount++;
+            }
 
-		foreach (SceneDataSerialized.TransportAgent transportAgent in sceneData.TransportAgents)
+            Passenger p = GameObject.Instantiate(PassengerPrefab, Vector3.zero, Quaternion.identity, PassengerList.transform).GetComponent<Passenger>();
+            p.LoadFromFile(GameObject.Find(filePassenger.Destination), filePassenger.Special, filePassenger.Name);  // created method to load
+            //p.IntendedDestination = GameObject.Find(passenger.Destination);
+            //p.SendDestination();
+        }
+
+		foreach (SceneDataSerialized.TransportAgent fileTransportAgent in sceneData.TransportAgents)
 		{
-			TransportAgent a = GameObject.Instantiate(TransportAgentPrefab, Vector3.zero,  Quaternion.identity).GetComponent<TransportAgent>();
-			a.name = transportAgent.Name;
-			a.Capacity = transportAgent.Capacity;
-		}
-	}
+            capacity = fileTransportAgent.Capacity; // all agents same capacity
+            agentCount++;
+            if (fileTransportAgent.Special)
+            {
+                specialAgentCount++;
+            }
+            TransportAgent a = GameObject.Instantiate(TransportAgentPrefab, Vector3.zero,  Quaternion.identity).GetComponent<TransportAgent>();
+            a.LoadFromFile(fileTransportAgent.Special, fileTransportAgent.Capacity);  // created method to load
+            //a.name = transportAgent.Name;
+            //a.Capacity = transportAgent.Capacity;
+        }
+
+        //  get varaibles to display
+
+        PlayerPrefs.SetInt("AgentCount", agentCount);
+        PlayerPrefs.SetInt("SpecialAgentCount", specialAgentCount);
+        PlayerPrefs.SetInt("Capacity", capacity);
+        PlayerPrefs.SetInt("Points", passengerCount);
+        PlayerPrefs.SetInt("SpecialPoints", specialPassengerCount);
+        FindObjectOfType<UIHandler>().PrintVariables();
+    }
 
 	private struct SceneDataSerialized
 	{
@@ -103,12 +134,14 @@ class SceneDataBehaviour : MonoBehaviour
 		{
 			public string Name;
 			public int Capacity;
+            public bool Special;
 		}
 
 		public struct Passenger
 		{
 			public string Name;
 			public string Destination;
-		}
+            public bool Special;
+        }
 	}
 }
