@@ -95,6 +95,3 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _intendedDestination: {fileID: 0}
-  _special: 0
-  _cylinder: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
-  _cube: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
