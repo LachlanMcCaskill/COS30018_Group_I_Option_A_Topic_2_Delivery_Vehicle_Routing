@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Speed: 25
-  _capacity: 8
+  Capacity: 8
 --- !u!120 &1512606350974951957
 LineRenderer:
   m_ObjectHideFlags: 0
