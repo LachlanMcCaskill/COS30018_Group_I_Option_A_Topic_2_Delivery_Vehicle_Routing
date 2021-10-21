@@ -11,11 +11,18 @@ namespace RouteSolver
 
         public List<RoutePlan> Solve(Vector3 start, List<Vector3> _pointsREMOVE, List<TransportAgentIntroductionMessage> agentsWithCapacities, List<DestinationMessage> destinations)
         {
+            int specialDestinationCount = 0;
+            int specialcapacity = 0;
+
             string parameterLog = "Parameters passed to Solve()\n";
             parameterLog += "Start: " + start.ToString() + "\n";
             parameterLog += "Points (" + destinations.Count + "): ";
             for (int i = 0; i < destinations.Count; i++)
             {
+                if (destinations[i].special)
+                {
+                    specialDestinationCount++;
+                }
                 parameterLog += destinations[i].Position.ToString() + " ";
             }
 
@@ -23,6 +30,10 @@ namespace RouteSolver
             parameterLog += "\nAgents: ";
             for (int i = 0; i < agentsWithCapacities.Count; i++)
             {
+                if (agentsWithCapacities[i].Special)
+                {
+                    specialcapacity += agentsWithCapacities[i].Capacity;
+                }
                 totalCapacity += agentsWithCapacities[i].Capacity;
                 parameterLog += agentsWithCapacities[i].Capacity + " ";
             }
@@ -32,6 +43,9 @@ namespace RouteSolver
             List<RoutePlan> result = new List<RoutePlan>();
 
             int minimumSuccessiveTrips = Mathf.CeilToInt((float)destinations.Count / (float)totalCapacity);
+            int minimumSuccessiveSpecialTrips = Mathf.CeilToInt((float)specialDestinationCount / (float)specialcapacity);  // special counts
+
+            minimumSuccessiveTrips = Math.Max(minimumSuccessiveTrips, minimumSuccessiveSpecialTrips);
 
             //  Setting Variables
             //  int[] vars = GetVariables();    //  user can input variables or use default variables

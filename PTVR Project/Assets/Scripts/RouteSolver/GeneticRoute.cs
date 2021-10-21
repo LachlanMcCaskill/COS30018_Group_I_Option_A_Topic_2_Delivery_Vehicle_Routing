@@ -386,9 +386,11 @@ namespace RouteSolver
         void RoutePending(ref List<List<Vector3>> tripPlan, List<DestinationMessage> pendingSpecial, int p)
         {
             //int count = 0;
-
-            if (pendingSpecial.Count > p)
+            int runs = 2;
+            while (pendingSpecial.Count > p && runs > 0)
             {
+                runs--;
+                //Debug.LogError("number of special reassignment runs: " + runs);
                 for (int t = 0; t < trips; t++)
                 {
                     for (int i = 0; i < agents.Count; i++)
@@ -406,13 +408,40 @@ namespace RouteSolver
                                 else return;
                             }
                         }
-                        //  else count += agents[i].Capacity;
+                    }
+                }
+            }
+
+            int check = 0;  // once there are no new assignments
+            // just make a new route
+            if (pendingSpecial.Count > p && check != p)
+            {
+                check = p;
+                Debug.LogError("Making a  new route from unvisited special destinations.");
+                for (int t = 0; t < trips; t++)
+                {
+                    for (int i = 0; i < agents.Count; i++)
+                    {
+                        if (agents[i].Special)
+                        {
+                            int tripNumber = t * agents.Count + i;
+                            tripPlan[tripNumber].Add(depotPoint);
+                            for (int j = 0; j < agents[i].Capacity; j++)
+                            {
+                                if (pendingSpecial.Count > p)
+                                {
+                                    tripPlan[tripNumber].Add(pendingSpecial[p].Position);
+                                    p++;
+                                }
+                                else return;
+                            }
+                        }
                     }
                 }
             }
 
             if (pendingSpecial.Count > p)
-            {
+            {                
                 Debug.LogError("pending not routed. Generation: " + generation);
             }
         }
