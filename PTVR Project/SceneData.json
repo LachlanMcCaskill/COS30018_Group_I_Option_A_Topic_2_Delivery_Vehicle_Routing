@@ -1,0 +1,208 @@
+{
+  "Stops": [
+    {
+      "Name": "1",
+      "Position": {
+        "x": 20.0,
+        "y": 0.0,
+        "z": 20.0
+      }
+    },
+    {
+      "Name": "2",
+      "Position": {
+        "x": 9.0,
+        "y": 0.0,
+        "z": 90.75
+      }
+    },
+    {
+      "Name": "3",
+      "Position": {
+        "x": 12.5,
+        "y": 0.0,
+        "z": 10.0
+      }
+    },
+    {
+      "Name": "4",
+      "Position": {
+        "x": 29.5,
+        "y": 0.0,
+        "z": 29.5
+      }
+    },
+    {
+      "Name": "5",
+      "Position": {
+        "x": 29.5,
+        "y": 0.0,
+        "z": 80.5
+      }
+    },
+    {
+      "Name": "6",
+      "Position": {
+        "x": 74.2,
+        "y": 0.0,
+        "z": 80.5
+      }
+    },
+    {
+      "Name": "7",
+      "Position": {
+        "x": 74.2,
+        "y": 0.0,
+        "z": 12.5999985
+      }
+    },
+    {
+      "Name": "8",
+      "Position": {
+        "x": 74.2,
+        "y": 0.0,
+        "z": 37.8
+      }
+    },
+    {
+      "Name": "9",
+      "Position": {
+        "x": 89.1,
+        "y": 0.0,
+        "z": 24.6
+      }
+    },
+    {
+      "Name": "10",
+      "Position": {
+        "x": 89.1,
+        "y": 0.0,
+        "z": 62.6
+      }
+    },
+    {
+      "Name": "11",
+      "Position": {
+        "x": 56.4,
+        "y": 0.0,
+        "z": 85.6
+      }
+    },
+    {
+      "Name": "12",
+      "Position": {
+        "x": 45.15,
+        "y": 0.0,
+        "z": 12.0999985
+      }
+    },
+    {
+      "Name": "13",
+      "Position": {
+        "x": 17.9000015,
+        "y": 0.0,
+        "z": 48.1
+      }
+    },
+    {
+      "Name": "14",
+      "Position": {
+        "x": 89.4,
+        "y": 0.0,
+        "z": 85.85
+      }
+    },
+    {
+      "Name": "15",
+      "Position": {
+        "x": 92.7,
+        "y": 0.0,
+        "z": 73.0
+      }
+    },
+    {
+      "Name": "16",
+      "Position": {
+        "x": 62.3,
+        "y": 0.0,
+        "z": 67.2
+      }
+    }
+  ],
+  "TransportAgents": [
+    {
+      "Name": "TransportAgent 1",
+      "Capacity": 10
+    },
+    {
+      "Name": "TransportAgent 2",
+      "Capacity": 10
+    }
+  ],
+  "Passengers": [
+    {
+      "Name": "Passenger",
+      "Destination": "1"
+    },
+    {
+      "Name": "Passenger (7)",
+      "Destination": "8"
+    },
+    {
+      "Name": "Passenger (4)",
+      "Destination": "5"
+    },
+    {
+      "Name": "Passenger (14)",
+      "Destination": "15"
+    },
+    {
+      "Name": "Passenger (15)",
+      "Destination": "16"
+    },
+    {
+      "Name": "Passenger (1)",
+      "Destination": "2"
+    },
+    {
+      "Name": "Passenger (5)",
+      "Destination": "6"
+    },
+    {
+      "Name": "Passenger (2)",
+      "Destination": "3"
+    },
+    {
+      "Name": "Passenger (11)",
+      "Destination": "12"
+    },
+    {
+      "Name": "Passenger (10)",
+      "Destination": "11"
+    },
+    {
+      "Name": "Passenger (9)",
+      "Destination": "10"
+    },
+    {
+      "Name": "Passenger (12)",
+      "Destination": "13"
+    },
+    {
+      "Name": "Passenger (8)",
+      "Destination": "9"
+    },
+    {
+      "Name": "Passenger (13)",
+      "Destination": "14"
+    },
+    {
+      "Name": "Passenger (3)",
+      "Destination": "4"
+    },
+    {
+      "Name": "Passenger (6)",
+      "Destination": "7"
+    }
+  ]
+}

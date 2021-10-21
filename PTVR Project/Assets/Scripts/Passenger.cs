@@ -8,28 +8,31 @@ public class DestinationMessage : Message
 
 public class Passenger : MonoBehaviour
 {
-    [SerializeField]private GameObject _intendedDestination;
+    public GameObject IntendedDestination;
 
     public Passenger(GameObject destinationToSet)
     {
-        _intendedDestination = destinationToSet;
+        IntendedDestination = destinationToSet;
     }
 
     private void OnEnable()
 	{
-		sendDestination();
+		if (IntendedDestination != null)
+		{
+			SendDestination();
+		}
 	}
 
-    public void sendDestination()
+    public void SendDestination()
     {
-        Debug.Log("My name is "+gameObject.name+" and I want to go to point" + _intendedDestination.name + ".");	
+        Debug.Log("My name is "+gameObject.name+" and I want to go to point" + IntendedDestination.name + ".");	
 
 		// send an introduction message
 		MessageBoard.SendMessage
         (
             new DestinationMessage
             {
-                destination = _intendedDestination,
+                destination = IntendedDestination,
             }
         );
     }
