@@ -15,6 +15,7 @@ public class TransportAgent : MonoBehaviour
 	private Color _color;
 	private Lerped<Vector3> _target = new Lerped<Vector3>(Vector3.zero, 0.0f, Easing.EaseInOut);
 	private LineRenderer _lineMap;
+	private GameObject _depot;
 
 	private bool messageSent = false;
 
@@ -23,7 +24,12 @@ public class TransportAgent : MonoBehaviour
 		MessageBoard.ListenForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
 		SendIntroductionMessage();
 		_color = _colors.Pop();
+
 		_lineMap = GetComponent<LineRenderer>();
+		_lineMap.startColor = _color;
+		_lineMap.endColor = _color;
+
+		_depot = GameObject.Find("Depot");
 	}
 
 	private void OnDisable()
@@ -73,14 +79,14 @@ public class TransportAgent : MonoBehaviour
 
 		if (_route != null)
 		{
-			IEnumerable<Tuple<GameObject, GameObject>> pairs = _route.Destinations.Zip(_route.Destinations.Skip(1), Tuple.Create);
-			_lineMap.positionCount = _route.Destinations.Count;
-			for (int i = 0; i < _lineMap.positionCount; i++)
+			Vector3[] points = _route.Destinations.Select(route => route.transform.position).ToArray();
+			_lineMap.positionCount = points.Length + 2;
+			_lineMap.SetPosition(0, _depot.transform.position);
+			for (int i=0; i<points.Length; i++)
 			{
-				Vector3 currentLocal = new Vector3 (UnityEngine.Random.Range(0f, 100f), 0f, UnityEngine.Random.Range(0f, 100f));
-				_lineMap.SetPosition(i, currentLocal);
-				//.DrawLine(lhs.transform.position, rhs.transform.position, _color);
+				_lineMap.SetPosition(i+1, points[i]);
 			}
+			_lineMap.SetPosition(points.Length + 1, _depot.transform.position);
 		}
 	}
 	private void DisplayCost()
