@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using MessageSystem;
+using UnityEngine.UI;
 
 public class UIHandler : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private GameObject costPanel;
     private List<GameObject> _costPanels = new List<GameObject>();
     [SerializeField]private GameObject layoutGroup;
+    [SerializeField]private Text totalText;
+    private float totalCostValue = 0f;
 
     private void OnEnable()
     {
@@ -19,6 +22,18 @@ public class UIHandler : MonoBehaviour
     private void OnDisable()
     {
         MessageBoard.StopListeningForMessage<TransportAgentCostMessage>(OnCostMessageRecieved);
+    }
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        totalText.text = "00.00";
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        totalText.text = totalCostValue.ToString("0.00");   
     }
 
     private void DisplayRouteCosts()
@@ -34,6 +49,7 @@ public class UIHandler : MonoBehaviour
         CostPanel newCostPanel = GameObject.Instantiate(costPanel, layoutGroup.transform).GetComponent<CostPanel>();
         newCostPanel.cost = cost.ToString("0.00");
         newCostPanel.routeColour = routeColour;
+        totalCostValue += cost;
     }
 
     private void OnCostMessageRecieved(TransportAgentCostMessage m)
