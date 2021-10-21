@@ -803,7 +803,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 716d1ec464d91fd4c923b4b29fae6518, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _targetsceneName: Routing
+  _targetsceneName: LoadFromFile
 --- !u!1 &424902058
 GameObject:
   m_ObjectHideFlags: 0
