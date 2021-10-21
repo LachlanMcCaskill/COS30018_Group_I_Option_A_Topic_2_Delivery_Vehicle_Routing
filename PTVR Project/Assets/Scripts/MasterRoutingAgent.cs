@@ -3,7 +3,6 @@ using UnityEngine;
 using MessageSystem;
 using RouteSolver;
 using System.Linq;
-using UnityEngine.SceneManagement;
 
 public class MasterRoutingAgent : MonoBehaviour
 {
@@ -29,50 +28,19 @@ public class MasterRoutingAgent : MonoBehaviour
 
     private void Start()
     {
-		if(PlayerPrefs.HasKey("RoutingStrategy"))
-		{
-            switch (PlayerPrefs.GetString("RoutingStrategy"))
-			{
-				case "Greedy1": 
-					_routeSolver = new GreedyRouteSolver();
-					break;
-				case "Greedy2": 
-					_routeSolver = new AlternativeGreedyRouteSolver();
-					break;
-				case "KMeans1":
-					_routeSolver = new KMeansClusterRouteSolver(new GreedyRouteSolver());
-					break;
-				case "KMeans2":
-					_routeSolver = new KMeansClusterRouteSolver(new AlternativeGreedyRouteSolver());
-					break;
-				case "GA":
-					_routeSolver = new GeneticRouteSolver();
-					break;
-				case "KMeansGA":
-					_routeSolver = new KMeansClusterRouteSolver(new GeneticRouteSolver());
-					break;
-				default:
-					break;
-			}
-			_transportNetwork = GameObject.Find("Network").GetComponent<TransportNetwork>();
-
-            RouteAgents();
-		}
-		else
-		{
-			Debug.Log("Player prefs not set. If you're seeing this in unity, start the game from the main scene");
-		}	
+        _routeSolver = new GreedyRouteSolver();
+        //  _routeSolver = new GeneticRouteSolver();
+          //_routeSolver = new KMeansClusterRouteSolver(new GeneticRouteSolver());
+        _transportNetwork = GameObject.Find("Network").GetComponent<TransportNetwork>();
+		RouteAgents();
     }
 
 	private void RouteAgents()
 	{
 		Log.Info("Sending route to agents...");
 		Route[] routes = CreateRoutes();
-		if(routes != null)
-		{
-			SendRoutes(routes);
-			_generatedRoute = true;
-		}
+		SendRoutes(routes);
+		_generatedRoute = true;
 	}
 
     private void SendRoutes(Route[] routes)
@@ -95,43 +63,27 @@ public class MasterRoutingAgent : MonoBehaviour
 
     private Route[] CreateRoutes()
     {
-		if(SceneManager.GetActiveScene().name == "Routing" && _transportNetwork.DepotDestination != null)
+		int transportAgentCount = _transportAgents.Count;
+		if (transportAgentCount == 0) return new Route[]{};
+
+		Vector3 start = _transportNetwork.DepotDestination.transform.position;
+		List<Vector3> points = new List<Vector3>();
+		if(_passengerData.Count > 0)
 		{
-			int transportAgentCount = _transportAgents.Count;
-			if (transportAgentCount == 0) return new Route[]{};
-
-			Vector3 start = _transportNetwork.DepotDestination.transform.position;
-			List<Vector3> points = new List<Vector3>();
-
-            List<DestinationMessage> destinations = new List<DestinationMessage>();
-
-			if(_passengerData.Count > 0)
+			foreach(DestinationMessage p in _passengerData)
 			{
-				foreach(DestinationMessage p in _passengerData)
+				if(!points.Contains(p.destination.transform.position))
 				{
-                    destinations.Add(p);
-
-                    if (!points.Contains(p.destination.transform.position))
-					{
-						points.Add(p.destination.transform.position);
-						Debug.Log("Added: "+p.destination.transform.position.ToString()+" to destinations.");
-					}
+					points.Add(p.destination.transform.position);
+					Debug.Log("Added: "+p.destination.transform.position.ToString()+" to destinations.");
 				}
-
-
-
-				List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents, destinations);
-				return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray(); 
-            }
-			else
-			{
-				Debug.Log("No passengers for which to create routes for.");
-				return null;
 			}
+			List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents);
+			return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
 		}
 		else
 		{
-			Debug.Log("Routing only possible in routing scene with a transport network with a non-null depot variable.");
+			Debug.Log("No passengers for which to create routes for.");
 			return null;
 		}
     }
