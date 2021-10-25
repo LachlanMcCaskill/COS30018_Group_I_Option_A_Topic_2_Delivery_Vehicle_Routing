@@ -10,7 +10,9 @@ public class UIHandler : MonoBehaviour
     private List<TransportAgentCostMessage> _routeCosts = new List<TransportAgentCostMessage>();
     [SerializeField] private GameObject costPanel;
     private List<GameObject> _costPanels = new List<GameObject>();
-    [SerializeField]private GameObject layoutGroup;
+    [SerializeField] private Text totalText;
+    private float totalCostValue = 0f;
+    [SerializeField] private GameObject layoutGroup;
 
     [SerializeField] private GameObject variablePanel;
     [SerializeField] private Text agentCountText;
@@ -21,6 +23,7 @@ public class UIHandler : MonoBehaviour
 
     private void OnEnable()
     {
+        totalText.text = "00.00";
         MessageBoard.ListenForMessage<TransportAgentCostMessage>(OnCostMessageRecieved);
         PrintVariables();
     }
@@ -41,7 +44,7 @@ public class UIHandler : MonoBehaviour
 
     private void DisplayRouteCosts()
     {
-        foreach(TransportAgentCostMessage c in _routeCosts)
+        foreach (TransportAgentCostMessage c in _routeCosts)
         {
             CreateCostPanel(c.cost, c.routeColour);
         }
@@ -52,6 +55,8 @@ public class UIHandler : MonoBehaviour
         CostPanel newCostPanel = GameObject.Instantiate(costPanel, layoutGroup.transform).GetComponent<CostPanel>();
         newCostPanel.cost = cost.ToString("0.00");
         newCostPanel.routeColour = routeColour;
+        totalCostValue += cost;
+        totalText.text = totalCostValue.ToString("0.00");
     }
 
     private void OnCostMessageRecieved(TransportAgentCostMessage m)
@@ -60,7 +65,7 @@ public class UIHandler : MonoBehaviour
         CreateCostPanel(m.cost, m.routeColour);
     }
 
-	// NOTE(Andrew): this is probably no longer necessary?
+    // NOTE(Andrew): this is probably no longer necessary?
     // private void OnCostMessageStopListening(TransportAgentCostMessage m)
     // {
     // 	 _routeCosts.Remove(m);
@@ -83,5 +88,10 @@ public class UIHandler : MonoBehaviour
     public void back()
     {
         UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+    }
+
+    private void OnCostMessageStopListening(TransportAgentCostMessage m)
+    {
+        _routeCosts.Remove(m);
     }
 }
