@@ -1,3 +1,4 @@
+
 using System.Collections.Generic;
 using UnityEngine;
 using MessageSystem;
@@ -42,6 +43,9 @@ public class TransportAgent : MonoBehaviour
     private Color _color;
     private Lerped<Vector3> _target = new Lerped<Vector3>(Vector3.zero, 0.0f, Easing.EaseInOut);
 
+	private LineRenderer _lineMap;
+	private GameObject _depot;
+
 
     [SerializeField] private Mesh _sphere;
     [SerializeField] private Mesh _cube;
@@ -59,6 +63,8 @@ public class TransportAgent : MonoBehaviour
         MessageBoard.ListenForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
         SendIntroductionMessage();
         _color = _colors.Pop();
+		_depot = GameObject.Find("Depot");
+		InitializeLineRenderer();
     }
 
     public void GenerateFromPreferences()
@@ -69,11 +75,20 @@ public class TransportAgent : MonoBehaviour
         MessageBoard.ListenForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
         SendIntroductionMessage();
         _color = _colors.Pop();
+		_depot = GameObject.Find("Depot");
+		InitializeLineRenderer();
     }
 
     //private void OnEnable()
     //{
     //}
+	
+	private void InitializeLineRenderer()
+	{
+		_lineMap = GetComponent<LineRenderer>();
+		_lineMap.startColor = _color;
+		_lineMap.endColor = _color;
+	}
 
     public void SetCapacity(int capacity)
     {
@@ -156,6 +171,7 @@ public class TransportAgent : MonoBehaviour
             {
                 DisplayCost();
             }
+			DrawLine();
         }
     }
 
@@ -164,6 +180,18 @@ public class TransportAgent : MonoBehaviour
         SendCostMessage(_route.TotalDistance); //this can be any numeric value
         messageSent = true;
     }
+
+	private void DrawLine()
+	{
+		Vector3[] points = _route.Destinations.Select(route => route.transform.position).ToArray();
+		_lineMap.positionCount = points.Length + 2;
+		_lineMap.SetPosition(0, _depot.transform.position);
+		for (int i=0; i<points.Length; i++)
+		{
+			_lineMap.SetPosition(i+1, points[i]);
+		}
+		_lineMap.SetPosition(points.Length + 1, _depot.transform.position);
+	}
 
     private void SendIntroductionMessage()
     {
