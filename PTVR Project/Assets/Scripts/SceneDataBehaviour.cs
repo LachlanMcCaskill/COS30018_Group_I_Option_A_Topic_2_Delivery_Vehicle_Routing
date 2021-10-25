@@ -62,6 +62,7 @@ class SceneDataBehaviour : MonoBehaviour
 
 	private void Load()
 	{
+		Log.Info(Log.Purple("Loading SceneData.json"));
 		string sceneDataString = File.ReadAllText("SceneData.json");
 		SceneDataSerialized sceneData = JsonConvert.DeserializeObject<SceneDataSerialized>(sceneDataString);
 
@@ -84,6 +85,7 @@ class SceneDataBehaviour : MonoBehaviour
 			TransportAgent a = GameObject.Instantiate(TransportAgentPrefab, Vector3.zero,  Quaternion.identity).GetComponent<TransportAgent>();
 			a.name = transportAgent.Name;
 			a.Capacity = transportAgent.Capacity;
+			a.SendIntroductionMessage();
 		}
 	}
 

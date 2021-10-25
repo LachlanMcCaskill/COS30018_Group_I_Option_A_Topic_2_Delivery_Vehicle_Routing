@@ -20,7 +20,10 @@ public class TransportAgent : MonoBehaviour
 	private void OnEnable()
 	{
 		MessageBoard.ListenForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
-		SendIntroductionMessage();
+		if (Capacity > 0)
+		{
+			SendIntroductionMessage();
+		}
 		_color = _colors.Pop();
 	}
 
@@ -76,7 +79,7 @@ public class TransportAgent : MonoBehaviour
 		messageSent = true;
 	}
 
-	private void SendIntroductionMessage()
+	public void SendIntroductionMessage()
 	{
 		MessageBoard.SendMessage
 		(
