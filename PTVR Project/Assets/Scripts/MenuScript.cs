@@ -58,14 +58,14 @@ public class MenuScript : MonoBehaviour
 
     public void QuitApp()
     {
-        if (EditorApplication.isPlaying)
-        {
-            EditorApplication.isPlaying = false;
-        }
-        else
-        {
+        //if (EditorApplication.isPlaying)
+        //{
+        //    EditorApplication.isPlaying = false;
+        //}
+        //else
+        //{
             Application.Quit();
-        }
-        Debug.Log("Debug: Exit button pressed.");
+        //}
+        //Debug.Log("Debug: Exit button pressed.");
     }
 }
