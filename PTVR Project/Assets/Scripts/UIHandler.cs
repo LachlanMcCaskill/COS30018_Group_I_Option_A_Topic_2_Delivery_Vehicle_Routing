@@ -1,44 +1,50 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 using MessageSystem;
-using UnityEngine.UI;
 
 public class UIHandler : MonoBehaviour
 {
     private List<TransportAgentCostMessage> _routeCosts = new List<TransportAgentCostMessage>();
     [SerializeField] private GameObject costPanel;
     private List<GameObject> _costPanels = new List<GameObject>();
-    [SerializeField]private GameObject layoutGroup;
-    [SerializeField]private Text totalText;
+    [SerializeField] private Text totalText;
     private float totalCostValue = 0f;
+    [SerializeField] private GameObject layoutGroup;
+
+    [SerializeField] private GameObject variablePanel;
+    [SerializeField] private Text agentCountText;
+    [SerializeField] private Text specialAgentCountText;
+    [SerializeField] private Text capacityText;
+    [SerializeField] private Text passengerCountText;
+    [SerializeField] private Text specialPassengerCountText;
 
     private void OnEnable()
     {
+        totalText.text = "00.00";
         MessageBoard.ListenForMessage<TransportAgentCostMessage>(OnCostMessageRecieved);
+        PrintVariables();
+    }
+
+    public void PrintVariables()
+    {
+        agentCountText.text = PlayerPrefs.GetInt("AgentCount").ToString();
+        specialAgentCountText.text = PlayerPrefs.GetInt("SpecialAgentCount").ToString();
+        capacityText.text = PlayerPrefs.GetInt("Capacity").ToString();
+        passengerCountText.text = PlayerPrefs.GetInt("Points").ToString();
+        specialPassengerCountText.text = PlayerPrefs.GetInt("SpecialPoints").ToString();
     }
 
     private void OnDisable()
     {
-        MessageBoard.StopListeningForMessage<TransportAgentCostMessage>(OnCostMessageStopListening);
-    }
-
-    // Start is called before the first frame update
-    void Start()
-    {
-        totalText.text = "00.00";
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        totalText.text = totalCostValue.ToString("0.00");   
+        MessageBoard.StopListeningForMessage<TransportAgentCostMessage>(OnCostMessageRecieved);
     }
 
     private void DisplayRouteCosts()
     {
-        foreach(TransportAgentCostMessage c in _routeCosts)
+        foreach (TransportAgentCostMessage c in _routeCosts)
         {
             CreateCostPanel(c.cost, c.routeColour);
         }
@@ -50,6 +56,7 @@ public class UIHandler : MonoBehaviour
         newCostPanel.cost = cost.ToString("0.00");
         newCostPanel.routeColour = routeColour;
         totalCostValue += cost;
+        totalText.text = totalCostValue.ToString("0.00");
     }
 
     private void OnCostMessageRecieved(TransportAgentCostMessage m)
@@ -58,22 +65,33 @@ public class UIHandler : MonoBehaviour
         CreateCostPanel(m.cost, m.routeColour);
     }
 
-    private void OnCostMessageStopListening(TransportAgentCostMessage m)
-    {
-        _routeCosts.Remove(m);
-    }
+    // NOTE(Andrew): this is probably no longer necessary?
+    // private void OnCostMessageStopListening(TransportAgentCostMessage m)
+    // {
+    // 	 _routeCosts.Remove(m);
+    // }
 
     //button methods
     public void QuitApp()
     {
-        if (EditorApplication.isPlaying)
-        {
-            EditorApplication.isPlaying = false;
-        }
-        else
-        {
+        //if (EditorApplication.isPlaying)
+        //{
+        //    EditorApplication.isPlaying = false;
+        //}
+        //else
+        //{
             Application.Quit();
-        }
-        Debug.Log("Debug: Exit button pressed.");
+        //}
+        //Debug.Log("Debug: Exit button pressed.");
+    }
+
+    public void back()
+    {
+        UnityEngine.SceneManagement.SceneManager.LoadScene("Menu");
+    }
+
+    private void OnCostMessageStopListening(TransportAgentCostMessage m)
+    {
+        _routeCosts.Remove(m);
     }
 }
