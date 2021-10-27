@@ -26,13 +26,13 @@ namespace RouteSolver
         }
 
         //  Initial
-        public List<ClusterGeneticRoute> PopulateGeneration(List<int> initialOrder, List<Vector3> _points, Vector3 start)
+        public List<ClusterGeneticRoute> PopulateGeneration(List<int> initialOrder, List<Vector3> _points, Vector3 start, int trips)
         {
             population = new List<ClusterGeneticRoute>();
             for (int i = 0; i < populationSize; i++)
             {
                 //  Debug.Log("initial order " + initialOrder.Count);
-                ClusterGeneticRoute newRoute = new ClusterGeneticRoute(start, _points, initialOrder, r, agents);
+                ClusterGeneticRoute newRoute = new ClusterGeneticRoute(start, _points, initialOrder, r, agents, trips);
                 population.Add(newRoute);
             }
             return population;
@@ -44,8 +44,8 @@ namespace RouteSolver
             points = _points;
             agents = agentsWithCapacities;
 
-            List<int> initialOrder = CreateOrder(points.Count, agents); // the initial order is just a list the length of the total capacity of all agents, containing the order of points from first to last point and then the excess space filled with 0s to represent empty spots on an agent
-            population = PopulateGeneration(initialOrder, _points, start);
+            List<int> initialOrder = CreateOrder(points.Count, agents, trips); // the initial order is just a list the length of the total capacity of all agents, containing the order of points from first to last point and then the excess space filled with 0s to represent empty spots on an agent
+            population = PopulateGeneration(initialOrder, _points, start, trips);
         }
 
         public ClusterGeneration(ClusterGeneration parent)
@@ -65,7 +65,7 @@ namespace RouteSolver
             for (int i = 0; i < populationSize; i++)
             {
                 ClusterGeneticRoute[] parents = parent.GetParents();
-                population.Add(new ClusterGeneticRoute(points, parents[0], parents[1], r, agents));
+                population.Add(new ClusterGeneticRoute(points, parents[0], parents[1], r, agents, parent.population[0].trips));
             }
         }
 

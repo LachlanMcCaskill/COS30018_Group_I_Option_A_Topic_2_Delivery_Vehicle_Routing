@@ -8,17 +8,17 @@ namespace RouteSolver
     public class ClusterGeneticRouteSolver : IRouteSolver
     {
 
-        public List<RoutePlan> Solve(Vector3 start, List<Vector3> NULL, List<TransportAgentIntroductionMessage> agentsWithCapacities, List<DestinationMessage> destinations)
+        public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, List<TransportAgentIntroductionMessage> agentsWithCapacities, List<DestinationMessage> NONE)
         {
             string parameterLog = "Parameters passed to Solve()\n";
             parameterLog += "Start: " + start.ToString() + "\n";
-            List<Vector3> points = new List<Vector3>();
-            parameterLog += "Points (" + destinations.Count + "): ";
-            for (int i = 0; i < destinations.Count; i++)
-            {
-                points.Add(destinations[i].Position);
-                parameterLog += destinations[i].Position.ToString() + " ";
-            }
+            //  List<Vector3> points = new List<Vector3>();
+            //parameterLog += "Points (" + destinations.Count + "): ";
+            //for (int i = 0; i < destinations.Count; i++)
+            //{
+            //    points.Add(destinations[i].Position);
+            //    parameterLog += destinations[i].Position.ToString() + " ";
+            //}
             parameterLog += "\nAgents: ";
             for (int i = 0; i < agentsWithCapacities.Count; i++)
             {
@@ -36,7 +36,7 @@ namespace RouteSolver
 
             List<RoutePlan> result = new List<RoutePlan>();
 
-            int minimumSuccessiveTrips = Mathf.CeilToInt((float)destinations.Count / (float)totalCapacity);
+            int minimumSuccessiveTrips = totalCapacity; // Mathf.CeilToInt((float)destinations.Count / (float)totalCapacity);
 
             //  Setting Varaibles
             //  int[] vars = GetVariables();    //  user can input variables or use default variables
@@ -51,7 +51,7 @@ namespace RouteSolver
             System.Random r = new System.Random();
             List<ClusterGeneration> allGenerations = new List<ClusterGeneration>();
 
-            ClusterGeneration currentGeneration = new ClusterGeneration(start, points, agentsWithCapacities, r);
+            ClusterGeneration currentGeneration = new ClusterGeneration(start, points, agentsWithCapacities, r, minimumSuccessiveTrips);
             ClusterGeneration bestGeneration = currentGeneration;
 
             allGenerations.Add(currentGeneration);

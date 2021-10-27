@@ -14,6 +14,7 @@ namespace RouteSolver
         public List<int> order;
         public List<Vector3> points;   // this is just the points in no specific order, change the order variable only
         public Vector3 depotPoint;
+        public int trips;
 
         //  public List<RoutePlan> GetRoutePlan2()
         //  {
@@ -39,22 +40,28 @@ namespace RouteSolver
             for (int i = 0; i < agents.Count; i++)
             {
                 RoutePlan newPlan = new RoutePlan();
-
-                for (int j = 0; j < agents[i].Capacity; j++)
+                for (int t = 0; t < trips; t++)
                 {
-                    if (k < order.Count)
+                    if (t > 0)
                     {
-                        int pointIndex = order[k];
-                        k++;
-                        if (pointIndex > -1)    //  skip -1s, theyre empty capacity
+                        newPlan.Destinations.Push(depotPoint);
+                    }
+                    for (int j = 0; j < agents[i].Capacity; j++)
+                    {
+                        if (k < order.Count)
                         {
-                            Vector3 point = points[pointIndex];
-                            newPlan.Destinations.Push(point);
+                            int pointIndex = order[k];
+                            k++;
+                            if (pointIndex > -1)    //  skip -1s, theyre empty capacity
+                            {
+                                Vector3 point = points[pointIndex];
+                                newPlan.Destinations.Push(point);
+                            }
                         }
                     }
+                    newPlan.Destinations = Reverse(newPlan.Destinations);
+                    routePlan.Add(newPlan);
                 }
-                newPlan.Destinations = Reverse(newPlan.Destinations);
-                routePlan.Add(newPlan);
             }
 
             return routePlan;
@@ -70,20 +77,27 @@ namespace RouteSolver
             {
                 List<Vector3> newSubRoute = new List<Vector3>();
 
-                for (int j = 0; j < agents[i].Capacity; j++)
+                for (int t = 0; t < trips; t++)
                 {
-                    if (k < order.Count)
+                    if (t > 0)
                     {
-                        int pointIndex = order[k];
-                        k++;
-                        if (pointIndex > -1)    //  skip -1s, theyre empty capacity
+                        newSubRoute.Add(depotPoint);
+                    }
+                    for (int j = 0; j < agents[i].Capacity; j++)
+                    {
+                        if (k < order.Count)
                         {
-                            Vector3 point = points[pointIndex];
-                            newSubRoute.Add(point);
+                            int pointIndex = order[k];
+                            k++;
+                            if (pointIndex > -1)    //  skip -1s, theyre empty capacity
+                            {
+                                Vector3 point = points[pointIndex];
+                                newSubRoute.Add(point);
+                            }
                         }
                     }
+                    subRoutes.Add(newSubRoute);
                 }
-                subRoutes.Add(newSubRoute);
             }
 
             return subRoutes;
@@ -264,12 +278,13 @@ namespace RouteSolver
             }
         }
 
-        public ClusterGeneticRoute(Vector3 _start, List<Vector3> _points, List<int> _order, System.Random r, List<TransportAgentIntroductionMessage> agentsWithCapacities)
+        public ClusterGeneticRoute(Vector3 _start, List<Vector3> _points, List<int> _order, System.Random r, List<TransportAgentIntroductionMessage> agentsWithCapacities,  int _trips)
         {
             generation = 0;
             depotPoint = _start;
             agents = agentsWithCapacities;
             points = _points;
+            trips = _trips;
 
             order = new List<int>(_order);
 
@@ -431,7 +446,7 @@ namespace RouteSolver
         }
 
         // create route from parents
-        public ClusterGeneticRoute(List<Vector3> _points, ClusterGeneticRoute mother, ClusterGeneticRoute father, System.Random _r, List<TransportAgentIntroductionMessage> agentsWithCapacities)
+        public ClusterGeneticRoute(List<Vector3> _points, ClusterGeneticRoute mother, ClusterGeneticRoute father, System.Random _r, List<TransportAgentIntroductionMessage> agentsWithCapacities, int _trips)
         {
             // this is the constructor for a child
             // ordered crossover https://towardsdatascience.com/evolution-of-a-salesman-a-complete-genetic-algorithm-tutorial-for-python-6fe5d2b3ca35
@@ -439,8 +454,8 @@ namespace RouteSolver
             generation = mother.generation + 1;
             agents = agentsWithCapacities;
             points = _points;
+            trips = mother.trips;
             order = new List<int>(mother.order);
-
 
 
             string logSegments = "M: " + GetGeneString();
@@ -589,6 +604,7 @@ namespace RouteSolver
                 {
                     totalCapacity += agents[i].Capacity;
                 }
+                totalCapacity *= trips;
                 return totalCapacity;
             }
         }
