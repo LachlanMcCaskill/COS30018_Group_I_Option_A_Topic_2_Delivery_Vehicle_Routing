@@ -132,7 +132,7 @@ public class MasterRoutingAgent : MonoBehaviour
             }
             else
             {
-                Debug.Log("No passengers for which to create routes for.");
+                Debug.Log("No passengers for which to create routes.");
                 return null;
             }
         }
