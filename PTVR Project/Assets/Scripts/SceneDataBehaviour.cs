@@ -28,8 +28,10 @@ class SceneDataBehaviour : MonoBehaviour
 			Passengers = FindPassengers(),
 		};
 		string content = JsonConvert.SerializeObject(sceneData, Formatting.Indented);
-		File.WriteAllText("SceneData.json", content);
 
+        
+		File.WriteAllText(Application.dataPath + "/SceneData.json", content);
+        
 		// helper functions
 
 		SceneDataSerialized.Stop[] FindStops() => GameObject
@@ -67,7 +69,7 @@ class SceneDataBehaviour : MonoBehaviour
 
 	public void Load()
 	{
-		string sceneDataString = File.ReadAllText("SceneData.json");
+        string sceneDataString = File.ReadAllText(Application.dataPath + "/SceneData.json");
 		SceneDataSerialized sceneData = JsonConvert.DeserializeObject<SceneDataSerialized>(sceneDataString);
 
         int agentCount = 0;
