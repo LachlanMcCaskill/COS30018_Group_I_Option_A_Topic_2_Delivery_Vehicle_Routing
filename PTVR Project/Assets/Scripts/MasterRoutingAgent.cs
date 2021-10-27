@@ -34,22 +34,22 @@ public class MasterRoutingAgent : MonoBehaviour
         {
             switch (PlayerPrefs.GetString("RoutingStrategy"))
             {
-                case "Greedy1":
+                case "Greedy":
                     _routeSolver = new GreedyRouteSolver();
                     break;
-                case "Greedy2":
+                case "Alt Greedy":
                     _routeSolver = new AlternativeGreedyRouteSolver();
                     break;
-                case "KMeans1":
+                case "Cluster\nGreedy":
                     _routeSolver = new KMeansClusterRouteSolver(new GreedyRouteSolver());
                     break;
-                case "KMeans2":
+                case "Cluster\nAlt Greedy":
                     _routeSolver = new KMeansClusterRouteSolver(new AlternativeGreedyRouteSolver());
                     break;
-                case "GA":
+                case "Genetic":
                     _routeSolver = new GeneticRouteSolver();
                     break;
-                case "KMeansGA":
+                case "Cluster\nGenetic":
                     _routeSolver = new KMeansClusterRouteSolver(new GeneticRouteSolver());
                     break;
                 default:

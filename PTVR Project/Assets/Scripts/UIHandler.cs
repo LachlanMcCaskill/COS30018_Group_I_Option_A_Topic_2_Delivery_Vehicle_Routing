@@ -15,6 +15,7 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private GameObject layoutGroup;
 
     [SerializeField] private GameObject variablePanel;
+    [SerializeField] private Text strategyText;
     [SerializeField] private Text agentCountText;
     [SerializeField] private Text specialAgentCountText;
     [SerializeField] private Text capacityText;
@@ -30,6 +31,7 @@ public class UIHandler : MonoBehaviour
 
     public void PrintVariables()
     {
+        strategyText.text = PlayerPrefs.GetString("RoutingStrategy");
         agentCountText.text = PlayerPrefs.GetInt("AgentCount").ToString();
         specialAgentCountText.text = PlayerPrefs.GetInt("SpecialAgentCount").ToString();
         capacityText.text = PlayerPrefs.GetInt("Capacity").ToString();
