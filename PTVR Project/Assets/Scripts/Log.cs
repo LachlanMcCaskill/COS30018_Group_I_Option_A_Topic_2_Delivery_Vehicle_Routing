@@ -31,6 +31,9 @@ public static class Log
 		Error,
 	}
 
+	/// <summary>
+	/// Uses reflection to convert any object into a printable string format.
+	/// </summary>
 	public static string ObjectToString<T>(T obj)
 	{
 		Type type = obj.GetType();

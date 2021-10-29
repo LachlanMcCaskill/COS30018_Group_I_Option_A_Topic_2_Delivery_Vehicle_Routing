@@ -29,7 +29,7 @@ public class MasterRoutingAgent : MonoBehaviour
 
     private void Start()
     {
-//<<<<<<< HEAD
+		// Set the route solver to the users selected routing strategy
         if (PlayerPrefs.HasKey("RoutingStrategy"))
         {
             switch (PlayerPrefs.GetString("RoutingStrategy"))
@@ -64,15 +64,11 @@ public class MasterRoutingAgent : MonoBehaviour
         {
             Debug.Log("Player prefs not set. If you're seeing this in unity, start the game from the menu scene");
         }
-//=======
-//        _routeSolver = new GreedyRouteSolver();
-//        //  _routeSolver = new GeneticRouteSolver();
-//          //_routeSolver = new KMeansClusterRouteSolver(new GeneticRouteSolver());
-//        _transportNetwork = GameObject.Find("Network").GetComponent<TransportNetwork>();
-//		RouteAgents();
-//>>>>>>> save-load
     }
 
+	/// <summary>
+	/// Send calculated routes to all known transport agents.
+	/// </summary>
     private void RouteAgents()
     {
         Log.Info("Sending route to agents...");
@@ -102,6 +98,10 @@ public class MasterRoutingAgent : MonoBehaviour
         }
     }
 
+	/// <summary>
+	/// Using information received from various agents to understand the scene,
+	/// construct routes for the known transport agents.
+	/// </summary>
     private Route[] CreateRoutes()
     {
         if (SceneManager.GetActiveScene().name == "Routing" && _transportNetwork.DepotDestination != null)
@@ -114,8 +114,10 @@ public class MasterRoutingAgent : MonoBehaviour
 
             List<DestinationMessage> destinations = new List<DestinationMessage>();
 
+			// if there are passengers to route
             if (_passengerData.Count > 0)
             {
+				// convert passenger destinations into points
                 foreach (DestinationMessage p in _passengerData)
                 {
                     destinations.Add(p);
@@ -127,7 +129,10 @@ public class MasterRoutingAgent : MonoBehaviour
                     }
                 }
 
+				// pass points through route solver
                 List<RoutePlan> routePlans = _routeSolver.Solve(start, points, _transportAgents, destinations);
+
+				// covert routeplan into concrete routes
                 return routePlans.Select(routePlan => _transportNetwork.CreateRouteFromPlan(routePlan)).ToArray();
             }
             else
