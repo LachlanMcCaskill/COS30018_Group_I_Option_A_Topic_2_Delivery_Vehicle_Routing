@@ -13,6 +13,14 @@ public class MenuScript : MonoBehaviour
     public void OnEnable()
     {
         selectedStrategy.text = PlayerPrefs.GetString("RoutingStrategy");
+        if (PlayerPrefs.GetString("RoutingStrategy") == "Genetic")
+        {
+            PlayerPrefs.SetString("SpecialRoute", "True");
+        }
+        else
+        {
+            PlayerPrefs.SetString("SpecialRoute", "False");
+        }
     }
 
     public void setNonSpecialAgents()
@@ -33,57 +41,41 @@ public class MenuScript : MonoBehaviour
     {
         PlayerPrefs.SetString("SpecialRoute", "False");
         PlayerPrefs.SetString("RoutingStrategy", "Greedy");
-        //  selectedStrategy.text = "Greedy";
         selectedStrategy.text = PlayerPrefs.GetString("RoutingStrategy");
     }
 
     public void loadGameSceneGreedy2()
     {
         PlayerPrefs.SetString("SpecialRoute", "False");
-        //setNonSpecialAgents();
-        //UnityEngine.SceneManagement.SceneManager.LoadScene(_targetsceneName);
         PlayerPrefs.SetString("RoutingStrategy", "Alt Greedy");
-        //selectedStrategy.text = "Alt Greedy";
         selectedStrategy.text = PlayerPrefs.GetString("RoutingStrategy");
     }
 
     public void loadGameSceneGeneticAlgorithm()
     {
-        //setNonSpecialAgents();
         PlayerPrefs.SetString("SpecialRoute", "True");
-        //UnityEngine.SceneManagement.SceneManager.LoadScene(_targetsceneName);
         PlayerPrefs.SetString("RoutingStrategy", "Genetic");
-        //selectedStrategy.text = "Genetic";
         selectedStrategy.text = PlayerPrefs.GetString("RoutingStrategy");
     }
 
     public void loadGameSceneKMeans1()
     {
         PlayerPrefs.SetString("SpecialRoute", "False");
-        //setNonSpecialAgents();
-        //UnityEngine.SceneManagement.SceneManager.LoadScene(_targetsceneName);
         PlayerPrefs.SetString("RoutingStrategy", "Cluster\nGreedy");
-        //selectedStrategy.text = "Cluster\nGreedy1";
         selectedStrategy.text = PlayerPrefs.GetString("RoutingStrategy");
     }
 
     public void loadGameSceneKMeans2()
     {
         PlayerPrefs.SetString("SpecialRoute", "False");
-        //setNonSpecialAgents();
-        //UnityEngine.SceneManagement.SceneManager.LoadScene(_targetsceneName);
         PlayerPrefs.SetString("RoutingStrategy", "Cluster\nAlt Greedy");
-        //selectedStrategy.text = "Cluster\nGreedy2";
         selectedStrategy.text = PlayerPrefs.GetString("RoutingStrategy");
     }
 
     public void loadGameSceneKMeansGA()
     {
         PlayerPrefs.SetString("SpecialRoute", "False");
-        //setNonSpecialAgents();
-        //UnityEngine.SceneManagement.SceneManager.LoadScene(_targetsceneName);
         PlayerPrefs.SetString("RoutingStrategy", "Cluster\nGenetic");
-        //selectedStrategy.text = "Cluster\nGenetic";
         selectedStrategy.text = PlayerPrefs.GetString("RoutingStrategy");
     }
 

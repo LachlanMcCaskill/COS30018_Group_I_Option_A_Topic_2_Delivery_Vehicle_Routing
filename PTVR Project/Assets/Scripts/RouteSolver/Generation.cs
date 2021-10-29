@@ -23,7 +23,7 @@ namespace RouteSolver
             agents = agentsWithCapacities;
 
             List<int> initialOrder = CreateOrder(destinations.Count, agents, trips);
-            specialArray = CreateSpecialArray(trips);
+            //  specialArray = CreateSpecialArray(trips);
 
             population = PopulateGeneration(initialOrder, start, trips);
         }
@@ -45,7 +45,7 @@ namespace RouteSolver
         {
             r = parent.r;
             destinations = parent.destinations;
-            max = parent.max;
+            //max = parent.max;
             number = parent.number + 1;
             agents = parent.agents;
 
@@ -194,8 +194,7 @@ namespace RouteSolver
 
         public void Print()
         {
-            string log = "Generation " + number + " (Population: " + population.Count + ", Points " + destinations.Count + ", Generations: " + max +
-                ")\n"
+            string log = "Generation " + number + " (Population: " + population.Count + ", Points " + destinations.Count + ")\n"
                 + "Shortest Route: " + (int)ShortestRoute().WeightedDistance + "\n"
                 + "Average Distance: " + (int)AverageDistance()
                  + "\n";

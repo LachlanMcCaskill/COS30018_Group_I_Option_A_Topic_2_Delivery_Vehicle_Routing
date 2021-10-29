@@ -79,7 +79,6 @@ public class Passenger : MonoBehaviour
     {
         _special = special;
         _intendedDestination = destination;
-        //    getSpecial();
         setSpecialDestination();
         SendDestination();
     }
@@ -100,26 +99,6 @@ public class Passenger : MonoBehaviour
 
         _intendedDestination.GetComponent<MeshFilter>().mesh = mesh;
     }
-
-    //   private void OnEnable()
-    //{
-    //       if (_intendedDestination != null && PlayerPrefs.GetInt("Randomize") == 0)
-    //       {
-    //           sendDestination();
-    //       }
-    //}
-//=======
-//        IntendedDestination = destinationToSet;
-//    }
-
-//    private void OnEnable()
-//	{
-//		if (IntendedDestination != null)
-//		{
-//			SendDestination();
-//		}
-//	}
-//>>>>>>> save-load
 
     public void SendDestination()
     {

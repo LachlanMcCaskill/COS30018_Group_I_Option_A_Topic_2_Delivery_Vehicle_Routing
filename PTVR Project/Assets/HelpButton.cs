@@ -10,6 +10,5 @@ public class HelpButton : MonoBehaviour
     public void ToggleHelp()
     {
         helpText.SetActive(!helpText.activeSelf);
-        //  menuPanel.SetActive(!menuPanel.activeSelf);
     }
 }

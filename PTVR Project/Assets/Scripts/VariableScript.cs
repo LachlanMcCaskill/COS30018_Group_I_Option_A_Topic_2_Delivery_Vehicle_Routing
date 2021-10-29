@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class VariableScript : MonoBehaviour
 {
+    //  this script manages the UI that lets the user set configuration variables and stores that information for the Transport Network to read
 
     [SerializeField] private GameObject _agentCountText;
     [SerializeField] private GameObject _specialAgentCountText;
@@ -15,26 +16,35 @@ public class VariableScript : MonoBehaviour
 
     public void resetVariables()
     {
-        PlayerPrefs.SetString("SpecialRoute", "False");
+        //  remove special functions from routes that do not implement it
         PlayerPrefs.SetInt("AgentCount", 2);
         PlayerPrefs.SetInt("SpecialAgentCount", 1);
         PlayerPrefs.SetInt("Capacity", 6);
         PlayerPrefs.SetInt("Points", 16);
         PlayerPrefs.SetInt("SpecialPoints", 8);
-        //PlayerPrefs.SetInt("Randomize", 0);
-        PlayerPrefs.SetString("Mode", "Load");
+        PlayerPrefs.SetString("Mode", "Generate");
+    }
 
+    public void resetText()
+    {
         _agentCountText.GetComponent<Text>().text = PlayerPrefs.GetInt("AgentCount").ToString();
         _specialAgentCountText.GetComponent<Text>().text = PlayerPrefs.GetInt("SpecialAgentCount").ToString();
         _agentCapacityText.GetComponent<Text>().text = PlayerPrefs.GetInt("Capacity").ToString();
         _pointCountText.GetComponent<Text>().text = PlayerPrefs.GetInt("Points").ToString();
         _specialPointCountText.GetComponent<Text>().text = PlayerPrefs.GetInt("SpecialPoints").ToString();
-        _randomizeText.GetComponent<Text>().text = "Load File";
+
+        if (PlayerPrefs.GetString("Mode") == "Generate")
+        {
+            _randomizeText.GetComponent<Text>().text = "Generate";
+        }
+        else _randomizeText.GetComponent<Text>().text = "Load File";
+
     }
 
     private void Start()
     {
-        resetVariables();
+        resetText();
+        //  resetVariables();
     }
 
     public void ChangeMode()
@@ -49,24 +59,12 @@ public class VariableScript : MonoBehaviour
             PlayerPrefs.SetString("Mode", "Load");
             _randomizeText.GetComponent<Text>().text = "Load File";
         }
-        //if (PlayerPrefs.GetInt("Randomize") == 0)
-        //{
-        //    PlayerPrefs.SetInt("Randomize", 1);
-        //    _randomizeText.GetComponent<Text>().text = "ON";
-        //}
-        //else
-        //{
-        //    PlayerPrefs.SetInt("Randomize", 0);
-        //    _randomizeText.GetComponent<Text>().text = "OFF";
-        //}
     }
 
     public void increasePoints()
     {
         int currentCount = PlayerPrefs.GetInt("Points");
         PlayerPrefs.SetInt("Points", currentCount + 1);
-        //PlayerPrefs.SetInt("Randomize", 1);
-        //_randomizeText.GetComponent<Text>().text = "ON";
         _pointCountText.GetComponent<Text>().text = PlayerPrefs.GetInt("Points").ToString();
     }
 
@@ -79,8 +77,6 @@ public class VariableScript : MonoBehaviour
         }
         else
         {
-            //PlayerPrefs.SetInt("Randomize", 1);
-            //_randomizeText.GetComponent<Text>().text = "ON";
             PlayerPrefs.SetInt("Points", currentCount - 1);
         }
 
@@ -103,8 +99,6 @@ public class VariableScript : MonoBehaviour
         {
             PlayerPrefs.SetInt("SpecialPoints", PlayerPrefs.GetInt("Points"));
         }
-        //PlayerPrefs.SetInt("Randomize", 1);
-        //_randomizeText.GetComponent<Text>().text = "ON";
         _specialPointCountText.GetComponent<Text>().text = PlayerPrefs.GetInt("SpecialPoints").ToString();
     }
 
@@ -119,8 +113,6 @@ public class VariableScript : MonoBehaviour
         {
             PlayerPrefs.SetInt("SpecialPoints", currentCount - 1);
         }
-        //PlayerPrefs.SetInt("Randomize", 1);
-        //_randomizeText.GetComponent<Text>().text = "ON";
         _specialPointCountText.GetComponent<Text>().text = PlayerPrefs.GetInt("SpecialPoints").ToString();
     }
 

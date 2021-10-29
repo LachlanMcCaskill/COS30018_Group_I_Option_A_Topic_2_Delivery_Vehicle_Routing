@@ -98,19 +98,6 @@ class SceneDataBehaviour : MonoBehaviour
             Passenger p = GameObject.Instantiate(PassengerPrefab, Vector3.zero, Quaternion.identity, PassengerList.transform).GetComponent<Passenger>();
             p.LoadFromFile(GameObject.Find(sceneData.Passengers[i - 1].Destination), sceneData.Passengers[i - 1].Special, sceneData.Passengers[i - 1].Name);  // created method to load
         }
-        //foreach (SceneDataSerialized.Passenger filePassenger in sceneData.Passengers)
-        //{
-        //    passengerCount++;
-        //    if (filePassenger.Special)
-        //    {
-        //        specialPassengerCount++;
-        //    }
-
-        //    Passenger p = GameObject.Instantiate(PassengerPrefab, Vector3.zero, Quaternion.identity, PassengerList.transform).GetComponent<Passenger>();
-        //    p.LoadFromFile(GameObject.Find(filePassenger.Destination), filePassenger.Special, filePassenger.Name);  // created method to load
-        //    //p.IntendedDestination = GameObject.Find(passenger.Destination);
-        //    //p.SendDestination();
-        //}
 
 
         // reverse this to maintain order
@@ -126,22 +113,8 @@ class SceneDataBehaviour : MonoBehaviour
             TransportAgent a = GameObject.Instantiate(TransportAgentPrefab, Vector3.zero, Quaternion.identity).GetComponent<TransportAgent>();
             a.LoadFromFile(sceneData.TransportAgents[i - 1].Special, sceneData.TransportAgents[i - 1].Capacity);  // created method to load
         }
-  //      foreach (SceneDataSerialized.TransportAgent fileTransportAgent in sceneData.TransportAgents)
-		//{
-  //          capacity = fileTransportAgent.Capacity; // all agents same capacity
-  //          agentCount++;
-  //          if (fileTransportAgent.Special)
-  //          {
-  //              specialAgentCount++;
-  //          }
-  //          TransportAgent a = GameObject.Instantiate(TransportAgentPrefab, Vector3.zero,  Quaternion.identity).GetComponent<TransportAgent>();
-  //          a.LoadFromFile(fileTransportAgent.Special, fileTransportAgent.Capacity);  // created method to load
-  //          //a.name = transportAgent.Name;
-  //          //a.Capacity = transportAgent.Capacity;
-  //      }
 
         //  get varaibles to display
-
         PlayerPrefs.SetInt("AgentCount", agentCount);
         PlayerPrefs.SetInt("SpecialAgentCount", specialAgentCount);
         PlayerPrefs.SetInt("Capacity", capacity);
@@ -162,7 +135,7 @@ class SceneDataBehaviour : MonoBehaviour
             public float PositionX;
             public float PositionY;
             public float PositionZ;
-            //public Vector3 Position;
+            //public Vector3 Position;  cannot use vector for some indiscernable reason
 		}
 
 		public struct TransportAgent

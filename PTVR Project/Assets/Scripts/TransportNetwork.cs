@@ -7,7 +7,6 @@ public class TransportNetwork : MonoBehaviour
     public GameObject agentPrefab;
 	public GameObject StopPrefab;
     public GameObject passengerPrefab;
-    //  public int StopCount = 16;
     public GameObject[] Destinations { get; private set; }
     public GameObject DepotDestination { get; private set; }
     public GameObject passengerList;
@@ -23,6 +22,9 @@ public class TransportNetwork : MonoBehaviour
     public void Start()
     {
         DepotDestination = GameObject.Find("Depot");
+
+        //  if Generate mode then create a new scenario using the configuartion set
+        //  otherwise load a configuration from file
         if (PlayerPrefs.GetString("Mode") == "Generate")
         {
             Debug.Log("Mode: Generating new environment.    PlayerPrefs.GetString(Mode) = " + PlayerPrefs.GetString("Mode"));
@@ -35,10 +37,10 @@ public class TransportNetwork : MonoBehaviour
             Debug.Log("Mode: Loading from file.    PlayerPrefs.GetString(Mode) = " + PlayerPrefs.GetString("Mode"));
             FindObjectOfType<SceneDataBehaviour>().Load();
             Destinations = GameObject.FindGameObjectsWithTag("Stop");
-            //  StopCount = Destinations.Length;
         }
     }
 
+    //  create a passenger for each stop
     private void CreatePassengers()
     {
         for (int i = 0; i < Destinations.Length; i++)
@@ -49,18 +51,20 @@ public class TransportNetwork : MonoBehaviour
         }
     }
 
+    //  Create a stop at a random point
     public GameObject CreateStop(int i)
     {
         Vector3 randomPosition = new Vector3(Random.Range(0f, 100f), 0f, Random.Range(0f, 100f));
         GameObject destinationToAdd = Instantiate(StopPrefab, randomPosition, Quaternion.identity, transform);
         destinationToAdd.name = "Stop " + (i + 1).ToString();
 
-        //Debug.Log("Randomize: Creating stop at  " + randomPosition);
         return destinationToAdd;
     }
 
+    //  Creates a random scattering of stops based on configuration
     public void CreateRandomPoints()
     {
+        //  clean out any existing objects, just a precaution
         foreach (GameObject s in GameObject.FindGameObjectsWithTag("Stop"))
         {
             DestroyImmediate(s.gameObject);
@@ -69,15 +73,12 @@ public class TransportNetwork : MonoBehaviour
         {
             DestroyImmediate(s.gameObject);
         }
-        //if there are no stops in the scene, create them randomly
+
         if (StopPrefab != null)
         {
             Destinations = new GameObject[GetStopCount];
             for (int i = 0; i < GetStopCount; i++)
             {
-                //Vector3 randomPosition = new Vector3(Random.Range(0f, 100f), 0f, Random.Range(0f, 100f));
-                //GameObject destinationToAdd = Instantiate(StopPrefab, randomPosition, Quaternion.identity);
-                //destinationToAdd.name = (i + 1).ToString();
                 Destinations[i] = CreateStop(i);
             }
         }
@@ -87,6 +88,7 @@ public class TransportNetwork : MonoBehaviour
         }
     }
 
+    //  Create the number of transport agents set by the configuration
     private void CreateTransportAgents()
     {
         foreach (TransportAgent a in FindObjectsOfType<TransportAgent>())

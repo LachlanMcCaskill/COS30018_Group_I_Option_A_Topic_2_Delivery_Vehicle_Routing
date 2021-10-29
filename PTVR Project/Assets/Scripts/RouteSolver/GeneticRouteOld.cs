@@ -55,7 +55,7 @@ namespace RouteSolver
         public GeneticRouteOld(Vector3 _start, List<int> _order, System.Random r, List<TransportAgentIntroductionMessage> agentsWithCapacities,
             int _trips, List<DestinationMessage> _destinations, List<bool> _specialArray)
         {
-            specialArray = _specialArray;
+            //specialArray = _specialArray;
             trips = _trips;
             generation = 0;
             depotPoint = _start;

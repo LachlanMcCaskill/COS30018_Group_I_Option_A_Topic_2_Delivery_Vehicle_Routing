@@ -162,7 +162,7 @@ public class MasterRoutingAgent : MonoBehaviour
         _transportAgents.RemoveAll(agent => agent.TransportAgentId == message.TransportAgentId);
 
         //  regenerate route when an agent retires
-        //  this causes routes to be regenerated when you press back or quit
+        //  removed for now as this causes routes to be regenerated when you press back or quit
         //  if (_generatedRoute) RouteAgents(); 
     }
 
