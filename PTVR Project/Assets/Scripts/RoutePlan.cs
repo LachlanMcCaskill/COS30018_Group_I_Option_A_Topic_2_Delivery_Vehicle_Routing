@@ -7,6 +7,9 @@ public class RoutePlan
 {
     public Stack<Vector3> Destinations = new Stack<Vector3>();
 
+	/// <summary>
+	/// The accumulated distance between each of the destination points.
+	/// </summary>
     public float TotalDistance => Destinations
         .Zip(Destinations.Skip(1), Tuple.Create)
         .Aggregate(0.0f, (acc, val) => acc + Vector3.Distance(val.Item1, val.Item2));
