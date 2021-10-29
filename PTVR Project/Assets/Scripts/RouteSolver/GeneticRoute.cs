@@ -12,7 +12,6 @@ namespace RouteSolver
         int generation;
         public string name;
         public List<int> order;
-        //  public List<Vector3> points;   // this is just the points in no specific order, change the order variable only
         public List<DestinationMessage> destinations;
         public Vector3 depotPoint;
         public int trips;
