@@ -9,7 +9,7 @@ public class TransportAgent : MonoBehaviour
 	public float Speed;
 
     private List<Passenger> _passengers;
-    [SerializeField]private int _capacity;
+    public int Capacity;
     private Route _route = null;
     private Route _movementRoute = null;
 	private Color _color;
@@ -17,6 +17,8 @@ public class TransportAgent : MonoBehaviour
 
 	private bool messageSent = false;
 
+	//Check the message board for a route when enabled
+	//Send the agent's capacity when enabled
 	private void OnEnable()
 	{
 		MessageBoard.ListenForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
@@ -24,6 +26,8 @@ public class TransportAgent : MonoBehaviour
 		_color = _colors.Pop();
 	}
 
+	//Stop checking the message board when disabled
+	//Retire agent with a message to the board
 	private void OnDisable()
 	{
 		MessageBoard.StopListeningForMessage<TransportAgentRouteMessage>(OnTransportAgentRouteMessage);
@@ -64,18 +68,21 @@ public class TransportAgent : MonoBehaviour
 				Debug.DrawLine(lhs.transform.position, rhs.transform.position, _color);
 			}
 			if(!messageSent)
-			{
+			{	
+				//If we have not sent our current cost to the message board, send it
 				DisplayCost();
 			}
 		}
 	}
 
+	//send the cost of the current route to the message board
 	private void DisplayCost()
 	{
 		SendCostMessage(_route.TotalDistance); //this can be any numeric value
 		messageSent = true;
 	}
 
+	//send capacity to the message board
 	private void SendIntroductionMessage()
 	{
 		MessageBoard.SendMessage
@@ -83,7 +90,7 @@ public class TransportAgent : MonoBehaviour
 			new TransportAgentIntroductionMessage
 			{
 				TransportAgentId = GetInstanceID(),
-				Capacity = _capacity,
+				Capacity = Capacity,
 			}		
 		);
 	}
@@ -99,6 +106,7 @@ public class TransportAgent : MonoBehaviour
 		);
 	}
 
+	//Send current route cost to the message board
 	private void SendCostMessage(float routecost)
 	{
 		MessageBoard.SendMessage
@@ -138,6 +146,8 @@ public class TransportAgent : MonoBehaviour
 		}
 	);
 }
+
+//The following are the message types necessary to send to the message board
 
 public class TransportAgentIntroductionMessage : Message
 {

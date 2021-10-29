@@ -9,14 +9,17 @@ public class TransportNetwork : MonoBehaviour
     public GameObject[] Destinations { get; private set; }
     public GameObject DepotDestination { get; private set; }
 
+	//sets the variables on startup
 	public void Start()
 	{
+		//find all stops and the depot
 		DepotDestination = GameObject.Find("Depot");
 		Destinations = GameObject.FindGameObjectsWithTag("Stop");
 
 		//if there are no stops in the scene, create them randomly
 		if(Destinations.Length == 0 && StopPrefab != null)
 		{
+			//create a new array of stops
 			Destinations = new GameObject[StopCount];
 			for(int i = 0; i<StopCount; i++)
 			{

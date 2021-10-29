@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using MessageSystem;
+using UnityEngine.UI;
 
 public class UIHandler : MonoBehaviour
 {
@@ -10,29 +11,34 @@ public class UIHandler : MonoBehaviour
     [SerializeField] private GameObject costPanel;
     private List<GameObject> _costPanels = new List<GameObject>();
     [SerializeField]private GameObject layoutGroup;
+    [SerializeField]private Text totalText;
+    private float totalCostValue = 0f;
 
+    //Check message board for costs to display
     private void OnEnable()
     {
         MessageBoard.ListenForMessage<TransportAgentCostMessage>(OnCostMessageRecieved);
     }
 
+    //stop listening for costs to display
     private void OnDisable()
     {
         MessageBoard.StopListeningForMessage<TransportAgentCostMessage>(OnCostMessageStopListening);
     }
 
-    // Start is called before the first frame update
+    // Reset the sum of all route costs to 0 on startup
     void Start()
     {
-        
+        totalText.text = "00.00";
     }
 
-    // Update is called once per frame
+    // Update the total cost every frame
     void Update()
     {
-        
+        totalText.text = totalCostValue.ToString("0.00");   
     }
 
+    //create all cost panels
     private void DisplayRouteCosts()
     {
         foreach(TransportAgentCostMessage c in _routeCosts)
@@ -41,11 +47,13 @@ public class UIHandler : MonoBehaviour
         }
     }
 
+    //create a new UI panel that displays the cost of a route
     private void CreateCostPanel(float cost, Color routeColour)
     {
         CostPanel newCostPanel = GameObject.Instantiate(costPanel, layoutGroup.transform).GetComponent<CostPanel>();
         newCostPanel.cost = cost.ToString("0.00");
         newCostPanel.routeColour = routeColour;
+        totalCostValue += cost;
     }
 
     private void OnCostMessageRecieved(TransportAgentCostMessage m)
@@ -59,7 +67,7 @@ public class UIHandler : MonoBehaviour
         _routeCosts.Remove(m);
     }
 
-    //button methods
+    //Quit the application
     public void QuitApp()
     {
         if (EditorApplication.isPlaying)

@@ -5,6 +5,8 @@ namespace RouteSolver
 {
 	public class AlternativeGreedyRouteSolver : IRouteSolver
     {
+        //Solves the route using the alternative greedy routing method
+        //Find the shortest distance across points
         public List<RoutePlan> Solve(Vector3 start, List<Vector3> points, List<TransportAgentIntroductionMessage> agentsWithCapacities)
         {
             List<RoutePlan> result = new List<RoutePlan>();
@@ -30,6 +32,7 @@ namespace RouteSolver
                         currentDistance = Vector3.Distance(route.Destinations.Peek(), p);
                         if(currentDistance < shortestDistance)
                         {
+                            //select the shortest point
                             pointToSet = p;
                             shortestDistance = currentDistance;
                         }
@@ -61,6 +64,7 @@ namespace RouteSolver
             return result;
         }
 
+        //utility method for reversing a stack
         private Stack<T> Reverse<T>(Stack<T> stack)
         {
             Stack<T> reversed = new Stack<T>();
